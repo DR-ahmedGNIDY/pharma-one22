@@ -33,7 +33,7 @@ export default function LoginPage() {
         toast.error("البريد الإلكتروني أو كلمة المرور غير صحيحة");
       } else {
         toast.success("تم تسجيل الدخول بنجاح!");
-        router.push("/");
+        router.push("/admin");
         router.refresh();
       }
     } catch {
