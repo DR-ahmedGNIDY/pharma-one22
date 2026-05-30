@@ -5,20 +5,12 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { WhatsAppButton } from "@/components/ui/WhatsAppButton";
 import { CartDrawer } from "@/components/ui/CartDrawer";
+import { headers } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Pharma One Cosmetics - كل منتجات التجميل في مكان واحد",
   description:
     "أكثر من 7000 منتج من أكثر من 100 براند عالمي. تسوق الآن أفضل منتجات التجميل والعناية بالبشرة والشعر والعطور.",
-  keywords:
-    "تجميل, عطور, مكياج, عناية بالبشرة, عناية بالشعر, Dior, Chanel, MAC, Huda Beauty, CeraVe, The Ordinary",
-  authors: [{ name: "Pharma One Cosmetics" }],
-  openGraph: {
-    title: "Pharma One Cosmetics",
-    description: "كل منتجات التجميل في مكان واحد",
-    type: "website",
-    locale: "ar_EG",
-  },
 };
 
 export const viewport = {
@@ -27,20 +19,29 @@ export const viewport = {
   maximumScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const pathname = (await headers()).get("x-pathname") || "";
+  const isAdminPage = pathname.startsWith("/admin");
+
   return (
     <html lang="ar" dir="rtl">
       <body className="bg-black text-cream font-arabic min-h-screen overflow-x-hidden">
         <Providers>
-          <Header />
+          {!isAdminPage && <Header />}
+
           <main>{children}</main>
-          <Footer />
-          <WhatsAppButton />
-          <CartDrawer />
+
+          {!isAdminPage && (
+            <>
+              <Footer />
+              <WhatsAppButton />
+              <CartDrawer />
+            </>
+          )}
         </Providers>
       </body>
     </html>
