@@ -690,21 +690,14 @@ export default function AddProductPage() {
                       )}
                     </div>
                   ))}
-                  <label
-  htmlFor="product-image-upload"
-  className="aspect-square rounded-xl border-2 border-dashed border-gold/30 flex flex-col items-center justify-center gap-2 text-gold-muted hover:border-gold hover:text-gold transition-all cursor-pointer"
->
-  <Upload size={24} />
-  <span className="text-sm">رفع صورة</span>
-</label>
-
-<input
-  id="product-image-upload"
-  type="file"
-  accept="image/*"
-  style={{ display: "none" }}
-  onChange={handleImageUpload}
-/>
+                  <div className="col-span-2">
+  <input
+    type="file"
+    accept="image/*"
+    onChange={handleImageUpload}
+    className="bg-white text-black p-3 rounded"
+  />
+</div>
                     
                 </div>
                 <p className="text-xs text-gold-muted">
