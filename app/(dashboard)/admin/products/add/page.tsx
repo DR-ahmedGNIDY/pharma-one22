@@ -173,6 +173,8 @@ export default function AddProductPage() {
   const handleImageUpload = async (
   e: React.ChangeEvent<HTMLInputElement>
 ) => {
+  console.log("FILE SELECTED");
+
   const file = e.target.files?.[0];
 
   if (!file) return;
@@ -688,17 +690,21 @@ export default function AddProductPage() {
                       )}
                     </div>
                   ))}
-                  <label className="aspect-square rounded-xl border-2 border-dashed border-gold/30 flex flex-col items-center justify-center gap-2 text-gold-muted hover:border-gold hover:text-gold transition-all cursor-pointer">
+                  <label
+  htmlFor="product-image-upload"
+  className="aspect-square rounded-xl border-2 border-dashed border-gold/30 flex flex-col items-center justify-center gap-2 text-gold-muted hover:border-gold hover:text-gold transition-all cursor-pointer"
+>
   <Upload size={24} />
   <span className="text-sm">رفع صورة</span>
-
-  <input
-    type="file"
-    accept="image/*"
-    className="hidden"
-    onChange={handleImageUpload}
-  />
 </label>
+
+<input
+  id="product-image-upload"
+  type="file"
+  accept="image/*"
+  style={{ display: "none" }}
+  onChange={handleImageUpload}
+/>
                     
                 </div>
                 <p className="text-xs text-gold-muted">
