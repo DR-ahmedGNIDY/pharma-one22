@@ -305,10 +305,20 @@ export default function AdminProducts() {
 
               <div>
                 <label className="block text-sm text-gold-light mb-2">صور المنتج</label>
-                <div className="border-2 border-dashed border-gold/20 rounded-xl p-8 text-center hover:border-gold/40 transition-colors cursor-pointer">
-                  <ImageIcon className="mx-auto text-gold-muted mb-2" size={32} />
-                  <p className="text-sm text-gold-muted">اسحبي الصور هنا أو اضغطي للرفع</p>
-                </div>
+                <div>
+  <label className="block text-sm text-gold-light mb-2">
+    صور المنتج
+  </label>
+
+  <input
+    type="file"
+    accept="image/*"
+    className="w-full bg-black border border-gold/20 rounded-xl py-3 px-4 text-cream"
+    onChange={(e) => {
+      console.log("FILE SELECTED", e.target.files?.[0]);
+    }}
+  />
+</div>
               </div>
 
               <div className="flex gap-4 pt-4">
