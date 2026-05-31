@@ -170,16 +170,53 @@ export default function AddProductPage() {
     }));
   };
 
-  const handleImageUpload = () => {
-    const demoImages = [
-      "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&q=80",
-      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400&q=80",
-      "https://images.unsplash.com/photo-1571875257727-256c39da42af?w=400&q=80",
-    ];
-    const randomImage = demoImages[Math.floor(Math.random() * demoImages.length)];
-    setImages((prev) => [...prev, randomImage]);
-    toast.success("تم رفع الصورة!");
+  const handleImageUpload = async (
+  e: React.ChangeEvent<HTMLInputElement>
+) => {
+  const file = e.target.files?.[0];
+
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.readAsDataURL(file);
+
+  reader.onloadend = async () => {
+    try {
+      toast.loading("جاري رفع الصورة...", {
+        id: "upload",
+      });
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          image: reader.result,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setImages((prev) => [...prev, data.url]);
+
+        toast.success("تم رفع الصورة بنجاح", {
+          id: "upload",
+        });
+      } else {
+        toast.error("فشل رفع الصورة", {
+          id: "upload",
+        });
+      }
+    } catch {
+      toast.error("حدث خطأ أثناء الرفع", {
+        id: "upload",
+      });
+    }
   };
+};
 
   const removeImage = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
@@ -651,14 +688,18 @@ export default function AddProductPage() {
                       )}
                     </div>
                   ))}
-                  <button
-                    type="button"
-                    onClick={handleImageUpload}
-                    className="aspect-square rounded-xl border-2 border-dashed border-gold/30 flex flex-col items-center justify-center gap-2 text-gold-muted hover:border-gold hover:text-gold transition-all"
-                  >
-                    <Upload size={24} />
-                    <span className="text-sm">رفع صورة</span>
-                  </button>
+                  <label className="aspect-square rounded-xl border-2 border-dashed border-gold/30 flex flex-col items-center justify-center gap-2 text-gold-muted hover:border-gold hover:text-gold transition-all cursor-pointer">
+  <Upload size={24} />
+  <span className="text-sm">رفع صورة</span>
+
+  <input
+    type="file"
+    accept="image/*"
+    className="hidden"
+    onChange={handleImageUpload}
+  />
+</label>
+                    
                 </div>
                 <p className="text-xs text-gold-muted">
                   يمكنك رفع حتى 10 صور. الصورة الأولى هي الصورة الرئيسية.
