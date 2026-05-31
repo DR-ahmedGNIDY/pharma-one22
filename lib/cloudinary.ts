@@ -6,16 +6,22 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function uploadImage(file: string, folder: string = "pharma-one"): Promise<string> {
+export async function uploadImage(
+  file: string,
+  folder: string = "pharma-one"
+): Promise<string> {
   const result = await cloudinary.uploader.upload(file, {
     folder,
     quality: "auto",
     fetch_format: "auto",
   });
+
   return result.secure_url;
 }
 
-export async function deleteImage(publicId: string): Promise<void> {
+export async function deleteImage(
+  publicId: string
+): Promise<void> {
   await cloudinary.uploader.destroy(publicId);
 }
 
