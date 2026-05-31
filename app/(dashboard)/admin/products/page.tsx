@@ -19,6 +19,8 @@ interface ProductForm {
 export default function AdminProducts() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [images, setImages] = useState<string[]>([]);
+
   const [formData, setFormData] = useState<ProductForm>({
     name: "",
     brand: "",
@@ -311,13 +313,65 @@ export default function AdminProducts() {
   </label>
 
   <input
-    type="file"
-    accept="image/*"
-    className="w-full bg-black border border-gold/20 rounded-xl py-3 px-4 text-cream"
-    onChange={(e) => {
-      console.log("FILE SELECTED", e.target.files?.[0]);
-    }}
-  />
+  type="file"
+  accept="image/*"
+  className="w-full bg-black border border-gold/20 rounded-xl py-3 px-4 text-cream"
+  onChange={async (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onloadend = async () => {
+      try {
+        toast.loading("جاري رفع الصورة...", {
+          id: "upload",
+        });
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            image: reader.result,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          setImages((prev) => [...prev, data.url]);
+
+          toast.success("تم رفع الصورة بنجاح", {
+            id: "upload",
+          });
+        } else {
+          toast.error("فشل رفع الصورة", {
+            id: "upload",
+          });
+        }
+      } catch {
+        toast.error("حدث خطأ أثناء الرفع", {
+          id: "upload",
+        });
+      }
+    };
+  }}
+/>
+<div className="grid grid-cols-3 gap-3 mt-4">
+  {images.map((img, index) => (
+    <img
+      key={index}
+      src={img}
+      alt=""
+      className="w-full h-24 object-cover rounded-lg border border-gold/20"
+    />
+  ))}
+</div>
 </div>
               </div>
 
