@@ -58,7 +58,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const slug = slugify(name);
+    const slug =
+  body.slug && body.slug.trim() !== ""
+    ? body.slug.trim().toLowerCase()
+    : slugify(name);
 
     const existingCategory = await Category.findOne({
       $or: [{ name }, { slug }],
@@ -75,15 +78,15 @@ export async function POST(req: NextRequest) {
     }
 
     const category = await Category.create({
-      name,
-      slug,
-      description: description || "",
-      icon: icon || "",
-      image: image || "",
-      parent: parent || null,
-      isActive: true,
-      order: 0,
-    });
+  name,
+  slug,
+  description: description || "",
+  icon: icon || "",
+  image: image || "",
+  parent: parent || null,
+  isActive: true,
+  order: 0,
+});
 
     return NextResponse.json({
       success: true,
