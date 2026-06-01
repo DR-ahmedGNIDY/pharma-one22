@@ -1,32 +1,48 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronRight, ChevronLeft } from "lucide-react";
+
+interface Brand {
+  _id: string;
+  name: string;
+  slug: string;
+}
 
 interface BrandsSectionProps {
   selectedBrand: string | null;
   onSelectBrand: (brand: string | null) => void;
 }
 
-const brands = [
-  { id: "1", name: "DIOR", slug: "dior" },
-  { id: "2", name: "MAC", slug: "mac" },
-  { id: "3", name: "HUDA BEAUTY", slug: "huda-beauty" },
-  { id: "4", name: "CeraVe", slug: "cerave" },
-  { id: "5", name: "ESTÉE LAUDER", slug: "estee-lauder" },
-  { id: "6", name: "L'ORÉAL", slug: "loreal" },
-  { id: "7", name: "MAYBELLINE", slug: "maybelline" },
-  { id: "8", name: "The Ordinary", slug: "the-ordinary" },
-  { id: "9", name: "YSL", slug: "ysl" },
-  { id: "10", name: "CHANEL", slug: "chanel" },
-];
-
 export function BrandsSection({
   selectedBrand,
   onSelectBrand,
 }: BrandsSectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const [brands, setBrands] = useState<Brand[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadBrands();
+  }, []);
+
+  const loadBrands = async () => {
+    try {
+      const res = await fetch("/api/brands");
+
+      const data = await res.json();
+
+      if (data.success) {
+        setBrands(data.brands || []);
+      }
+    } catch (error) {
+      console.error("LOAD BRANDS ERROR:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
@@ -37,11 +53,23 @@ export function BrandsSection({
     }
   };
 
+  if (loading) {
+    return (
+      <section className="py-16 bg-black border-b border-gold/10">
+        <div className="container-luxury">
+          <div className="text-center">
+            <h2 className="text-4xl md:text-5xl font-extrabold text-[#D4AF37]">
+              جاري تحميل البراندات...
+            </h2>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-16 bg-black border-b border-gold/10">
       <div className="container-luxury">
-
-        {/* Header */}
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-4 mb-4">
             <div className="h-px w-20 bg-gradient-to-r from-transparent to-[#D4AF37]" />
@@ -54,28 +82,28 @@ export function BrandsSection({
           </h2>
 
           <p className="text-[#D4AF37]/80 text-lg">
-            أكثر من 100 براند عالمي أصلي
+            {brands.length} براند متاح
           </p>
         </div>
 
-        {/* Navigation */}
-        <div className="flex justify-center gap-3 mb-8">
-          <button
-            onClick={() => scroll("right")}
-            className="w-10 h-10 rounded-full border border-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-[0_0_15px_rgba(212,175,55,0.25)] transition-all"
-          >
-            <ChevronRight size={18} />
-          </button>
+        {brands.length > 0 && (
+          <div className="flex justify-center gap-3 mb-8">
+            <button
+              onClick={() => scroll("right")}
+              className="w-10 h-10 rounded-full border border-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-[0_0_15px_rgba(212,175,55,0.25)] transition-all"
+            >
+              <ChevronRight size={18} />
+            </button>
 
-          <button
-            onClick={() => scroll("left")}
-            className="w-10 h-10 rounded-full border border-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-[0_0_15px_rgba(212,175,55,0.25)] transition-all"
-          >
-            <ChevronLeft size={18} />
-          </button>
-        </div>
+            <button
+              onClick={() => scroll("left")}
+              className="w-10 h-10 rounded-full border border-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-[0_0_15px_rgba(212,175,55,0.25)] transition-all"
+            >
+              <ChevronLeft size={18} />
+            </button>
+          </div>
+        )}
 
-        {/* Brands Slider */}
         <div
           ref={scrollRef}
           className="flex gap-5 overflow-x-auto pb-4"
@@ -86,7 +114,7 @@ export function BrandsSection({
         >
           {brands.map((brand, index) => (
             <motion.div
-              key={brand.id}
+              key={brand._id}
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -157,6 +185,13 @@ export function BrandsSection({
           ))}
         </div>
 
+        {brands.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-[#D4AF37]/70">
+              لا توجد براندات مضافة حالياً
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );
