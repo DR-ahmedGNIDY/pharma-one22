@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -44,29 +44,7 @@ interface ProductForm {
   specifications: { key: string; value: string }[];
 }
 
-const brands = [
-  { id: "huda-beauty", name: "HUDA BEAUTY" },
-  { id: "the-ordinary", name: "The Ordinary" },
-  { id: "mac", name: "MAC" },
-  { id: "loreal", name: "L'Oréal" },
-  { id: "dior", name: "DIOR" },
-  { id: "chanel", name: "CHANEL" },
-  { id: "ysl", name: "YSL" },
-  { id: "estee-lauder", name: "Estée Lauder" },
-  { id: "cerave", name: "CeraVe" },
-  { id: "maybelline", name: "MAYBELLINE" },
-  { id: "kerastase", name: "Kérastase" },
-  { id: "nuxe", name: "Nuxe" },
-];
 
-const categories = [
-  { id: "makeup", name: "المكياج" },
-  { id: "skincare", name: "العناية بالبشرة" },
-  { id: "perfumes", name: "العطور" },
-  { id: "haircare", name: "العناية بالشعر" },
-  { id: "bodycare", name: "العناية بالجسم" },
-  { id: "tools", name: "الأدوات والإكسسوارات" },
-];
 
 const subCategories: Record<string, string[]> = {
   makeup: ["ظلال عيون", "أحمر شفاه", "كريم أساس", "ماسكارا", "ملمع شفاه", "كونسيلر", "بلاشر", "هايلايتر"],
@@ -76,6 +54,7 @@ const subCategories: Record<string, string[]> = {
   bodycare: ["لوشن", "زيت جسم", "مقشر", "صابون", "مزيل عرق"],
   tools: ["فرش مكياج", "ميرور", "أدوات العناية", "إكسسوارات"],
 };
+
 
 export default function AddProductPage() {
   const router = useRouter();
@@ -103,6 +82,36 @@ export default function AddProductPage() {
     isActive: true,
     specifications: [{ key: "", value: "" }],
   });
+
+  const [brands, setBrands] = useState<any[]>([]);
+const [categories, setCategories] = useState<any[]>([]);
+
+useEffect(() => {
+  loadData();
+}, []);
+
+const loadData = async () => {
+  try {
+    const [brandsRes, categoriesRes] = await Promise.all([
+      fetch("/api/brands"),
+      fetch("/api/categories"),
+    ]);
+
+    const brandsData = await brandsRes.json();
+    const categoriesData = await categoriesRes.json();
+
+    if (brandsData.success) {
+      setBrands(brandsData.brands);
+    }
+
+    if (categoriesData.success) {
+      setCategories(categoriesData.categories);
+    }
+  } catch (error) {
+    console.error(error);
+    toast.error("فشل تحميل البيانات");
+  }
+};
 
   const generateSlug = (name: string) => {
     return name
@@ -244,16 +253,56 @@ export default function AddProductPage() {
     }
   };
 
-  const handleSubmit = async () => {
-    if (!validateStep(1) || !validateStep(2) || !validateStep(3) || !validateStep(4)) {
-      toast.error("يرجى ملء جميع الحقول المطلوبة");
+  
+    const handleSubmit = async () => {
+  if (
+    !validateStep(1) ||
+    !validateStep(2) ||
+    !validateStep(3) ||
+    !validateStep(4)
+  ) {
+    toast.error("يرجى ملء جميع الحقول المطلوبة");
+    return;
+  }
+
+  try {
+    setIsSubmitting(true);
+
+    const res = await fetch("/api/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: formData.name,
+        brand: formData.brand,
+        category: formData.category,
+        description: formData.description,
+        price: formData.price,
+        discountPrice: formData.discountPrice,
+        stock: formData.stock,
+        sku: formData.sku,
+        images,
+      }),
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      toast.error(data.message || "فشل حفظ المنتج");
       return;
     }
-    setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    toast.success(`تم إضافة المنتج "${formData.name}" بنجاح!`);
+
+    toast.success("تم إضافة المنتج بنجاح");
+
     router.push("/admin/products");
-  };
+  } catch (error) {
+    console.error(error);
+    toast.error("حدث خطأ أثناء الحفظ");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const steps = [
     { id: 1, label: "المعلومات الأساسية", icon: FileText },
@@ -352,9 +401,9 @@ export default function AddProductPage() {
                   >
                     <option value="">اختر البراند</option>
                     {brands.map((brand) => (
-                      <option key={brand.id} value={brand.id}>
-                        {brand.name}
-                      </option>
+                    <option key={brand._id} value={brand._id}>
+                    {brand.name}
+                    </option>
                     ))}
                   </select>
                 </div>
@@ -387,11 +436,11 @@ export default function AddProductPage() {
                     className="w-full bg-black border border-gold/20 rounded-xl py-3 px-4 text-cream focus:outline-none focus:border-gold/50"
                   >
                     <option value="">اختر الفئة</option>
-                    {categories.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
-                        {cat.name}
-                      </option>
-                    ))}
+{categories.map((category) => (
+  <option key={category._id} value={category._id}>
+    {category.name}
+  </option>
+))}
                   </select>
                 </div>
 
@@ -766,8 +815,8 @@ export default function AddProductPage() {
                   <div className="p-4 bg-black rounded-xl border border-gold/10">
                     <h3 className="text-sm text-gold-muted mb-2">البراند / الفئة</h3>
                     <p className="text-cream">
-                      {brands.find((b) => b.id === formData.brand)?.name || "--"} /
-                      {categories.find((c) => c.id === formData.category)?.name || "--"}
+                      {brands.find((b) => b._id === formData.brand)?.name || "--"} /
+                      {categories.find((c) => c._id === formData.category)?.name || "--"}
                     </p>
                   </div>
                   <div className="p-4 bg-black rounded-xl border border-gold/10">
