@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Plus, Search, Edit2, Trash2, Image as ImageIcon } from "lucide-react";
 import toast from "react-hot-toast";
