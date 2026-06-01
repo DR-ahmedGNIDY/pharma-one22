@@ -15,6 +15,7 @@ import {
 const adminLinks = [
   { name: "لوحة التحكم", href: "/admin", icon: LayoutDashboard },
   { name: "المنتجات", href: "/admin/products", icon: ShoppingBag },
+  { name: "الفئات", href: "/admin/categories", icon: Tag },
   { name: "البراندات", href: "/admin/brands", icon: Tag },
   { name: "الطلبات", href: "/admin/orders", icon: BarChart3 },
   { name: "العملاء", href: "/admin/users", icon: Users },
