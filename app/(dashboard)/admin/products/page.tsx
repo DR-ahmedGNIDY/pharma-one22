@@ -33,21 +33,39 @@ export default function AdminProducts() {
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    // Validation
-    if (formData.discountPrice > 0 && formData.discountPrice >= formData.price) {
+  try {
+    if (
+      formData.discountPrice > 0 &&
+      formData.discountPrice >= formData.price
+    ) {
       toast.error("سعر الخصم يجب أن يكون أقل من السعر الأصلي");
       return;
     }
 
-    // Calculate discount percentage
-    const discountPercentage = formData.discountPrice > 0
-      ? Math.round(((formData.price - formData.discountPrice) / formData.price) * 100)
-      : 0;
+    const res = await fetch("/api/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...formData,
+        images,
+      }),
+    });
 
-    toast.success(`تم إضافة المنتج بنجاح! الخصم: ${discountPercentage}%`);
-    setIsModalOpen(false);
+    const data = await res.json();
+
+    if (!data.success) {
+      toast.error(data.message || "فشل حفظ المنتج");
+      return;
+    }
+
+    toast.success("تم حفظ المنتج بنجاح");
+
+    setImages([]);
+
     setFormData({
       name: "",
       brand: "",
@@ -58,7 +76,13 @@ export default function AdminProducts() {
       sku: "",
       description: "",
     });
-  };
+
+    setIsModalOpen(false);
+  } catch (error) {
+    console.error(error);
+    toast.error("حدث خطأ أثناء حفظ المنتج");
+  }
+};
 
   return (
     <div className="space-y-8">
