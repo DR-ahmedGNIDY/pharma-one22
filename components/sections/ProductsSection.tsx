@@ -45,8 +45,8 @@ export function ProductsSection({
           className="flex items-center justify-between mb-5"
         >
           <div>
-            <h2 className="text-xl md:text-2xl font-bold text-cream">{title}</h2>
-            <p className="text-xs text-gold-muted mt-0.5">{subtitle}</p>
+            <h2 className="text-3xl md:text-5xl font-bold text-cream">{title}</h2>
+            <p className="text-lg md:text-xl text-gold-muted mt-1">{subtitle}</p>
           </div>
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1">
@@ -65,7 +65,7 @@ export function ProductsSection({
             </div>
             <Link
               href={viewAllLink}
-              className="hidden sm:flex items-center gap-1 text-xs text-gold hover:text-gold-light transition-colors"
+              className="hidden sm:flex items-center gap-2 text-lg text-gold hover:text-gold-light transition-colors"
             >
               <span>الكل</span>
               <ArrowLeft size={14} />
