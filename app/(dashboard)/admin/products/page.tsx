@@ -20,7 +20,33 @@ export default function AdminProducts() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [images, setImages] = useState<string[]>([]);
+  const [brands, setBrands] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+  useEffect(() => {
+  loadData();
+}, []);
 
+const loadData = async () => {
+  try {
+    const [brandsRes, categoriesRes] = await Promise.all([
+      fetch("/api/brands"),
+      fetch("/api/categories"),
+    ]);
+
+    const brandsData = await brandsRes.json();
+    const categoriesData = await categoriesRes.json();
+
+    if (brandsData.success) {
+      setBrands(brandsData.brands);
+    }
+
+    if (categoriesData.success) {
+      setCategories(categoriesData.categories);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
   const [formData, setFormData] = useState<ProductForm>({
     name: "",
     brand: "",
@@ -115,16 +141,22 @@ export default function AdminProducts() {
             />
           </div>
           <select className="bg-black border border-gold/20 rounded-xl py-3 px-4 text-cream focus:outline-none focus:border-gold/50">
-            <option>كل الفئات</option>
-            <option>المكياج</option>
-            <option>العناية بالبشرة</option>
-            <option>العطور</option>
+            <option value="">كل الفئات</option>
+
+            {categories.map((category) => (
+            <option key={category._id} value={category._id}>
+            {category.name}
+            </option>
+            ))}
           </select>
           <select className="bg-black border border-gold/20 rounded-xl py-3 px-4 text-cream focus:outline-none focus:border-gold/50">
-            <option>كل البراندات</option>
-            <option>HUDA BEAUTY</option>
-            <option>The Ordinary</option>
-            <option>MAC</option>
+            <option value="">كل البراندات</option>
+
+            {brands.map((brand) => (
+            <option key={brand._id} value={brand._id}>
+            {brand.name}
+            </option>
+            ))}
           </select>
         </div>
       </div>
@@ -241,12 +273,12 @@ export default function AdminProducts() {
                     className="w-full bg-black border border-gold/20 rounded-xl py-3 px-4 text-cream focus:outline-none focus:border-gold/50"
                   >
                     <option value="">اختر البراند</option>
-                    <option value="huda-beauty">HUDA BEAUTY</option>
-                    <option value="the-ordinary">The Ordinary</option>
-                    <option value="mac">MAC</option>
-                    <option value="loreal">L'Oréal</option>
-                    <option value="dior">DIOR</option>
-                    <option value="chanel">CHANEL</option>
+
+                    {brands.map((brand) => (
+                    <option key={brand._id} value={brand._id}>
+                    {brand.name}
+                    </option>
+                    ))}
                   </select>
                 </div>
                 <div>
@@ -258,11 +290,12 @@ export default function AdminProducts() {
                     className="w-full bg-black border border-gold/20 rounded-xl py-3 px-4 text-cream focus:outline-none focus:border-gold/50"
                   >
                     <option value="">اختر الفئة</option>
-                    <option value="makeup">المكياج</option>
-                    <option value="skincare">العناية بالبشرة</option>
-                    <option value="perfumes">العطور</option>
-                    <option value="haircare">العناية بالشعر</option>
-                    <option value="bodycare">العناية بالجسم</option>
+
+                     {categories.map((category) => (
+                    <option key={category._id} value={category._id}>
+                    {category.name}
+                    </option>
+                    ))}
                   </select>
                 </div>
               </div>
