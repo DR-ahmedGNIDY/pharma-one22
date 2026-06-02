@@ -59,8 +59,12 @@ export default function AdminCategories() {
     e.preventDefault();
 
     try {
-      const res = await fetch("/api/categories", {
-        method: "POST",
+      const res = await fetch(
+  editingCategory
+    ? `/api/categories/${editingCategory._id}`
+    : "/api/categories",
+  {
+    method: editingCategory ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
         },
