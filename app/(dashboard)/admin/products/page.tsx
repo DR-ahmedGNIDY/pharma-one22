@@ -22,20 +22,25 @@ export default function AdminProducts() {
   const [images, setImages] = useState<string[]>([]);
   const [brands, setBrands] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
   useEffect(() => {
   loadData();
 }, []);
 
 const loadData = async () => {
   try {
-    const [brandsRes, categoriesRes] = await Promise.all([
-      fetch("/api/brands"),
-      fetch("/api/categories"),
-    ]);
+    const [brandsRes, categoriesRes, productsRes] = await Promise.all([
+  fetch("/api/brands"),
+  fetch("/api/categories"),
+  fetch("/api/products"),
+  ]);
 
     const brandsData = await brandsRes.json();
     const categoriesData = await categoriesRes.json();
-
+    const productsData = await productsRes.json();
+    if (productsData.success) {
+  setProducts(productsData.products);
+}
     if (brandsData.success) {
       setBrands(brandsData.brands);
     }
@@ -175,49 +180,109 @@ const loadData = async () => {
             </tr>
           </thead>
           <tbody>
-            {[1, 2, 3, 4, 5].map((_, index) => (
-              <motion.tr
-                key={index}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: index * 0.05 }}
-                className="border-b border-gold/5 hover:bg-gold/5 transition-colors"
-              >
-                <td className="py-4 px-6">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-lg bg-gold/10 flex items-center justify-center">
-                      <ImageIcon className="text-gold" size={20} />
-                    </div>
-                    <div>
-                      <p className="text-cream text-sm font-medium">The Ordinary Niacinamide</p>
-                      <p className="text-gold-muted text-xs">SKU: TO-001</p>
-                    </div>
-                  </div>
-                </td>
-                <td className="py-4 px-6 text-cream text-sm">The Ordinary</td>
-                <td className="py-4 px-6">
-                  <span className="text-gold font-bold">220 ج.م</span>
-                  <span className="text-gold-muted text-xs line-through mr-2">275 ج.م</span>
-                </td>
-                <td className="py-4 px-6 text-cream text-sm">100</td>
-                <td className="py-4 px-6">
-                  <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-xs">
-                    نشط
-                  </span>
-                </td>
-                <td className="py-4 px-6">
-                  <div className="flex items-center gap-2">
-                    <button className="p-2 rounded-lg bg-gold/10 text-gold hover:bg-gold hover:text-black transition-all">
-                      <Edit2 size={16} />
-                    </button>
-                    <button className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all">
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                </td>
-              </motion.tr>
-            ))}
-          </tbody>
+            {products.length === 0 && (
+  <tr>
+    <td
+      colSpan={6}
+      className="py-10 text-center text-gold-muted"
+    >
+      لا توجد منتجات
+    </td>
+  </tr>
+)}
+  {products.map((product: any, index: number) => (
+    <motion.tr
+      key={product._id}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: index * 0.05 }}
+      className="border-b border-gold/5 hover:bg-gold/5 transition-colors"
+    >
+      <td className="py-4 px-6">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-lg bg-gold/10 overflow-hidden flex items-center justify-center">
+            {product.images?.[0] ? (
+              <img
+                src={product.images[0]}
+                alt={product.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <ImageIcon className="text-gold" size={20} />
+            )}
+          </div>
+          
+
+      <div>
+  <p className="text-cream text-sm font-medium">
+    {product.name}
+  </p>
+
+  <p className="text-gold-muted text-xs">
+    SKU: {product.sku}
+  </p>
+</div>
+    </div>
+  </td>
+
+  <td className="py-4 px-6 text-cream text-sm">
+    {typeof product.brand === "object"
+      ? product.brand?.name
+      : product.brand}
+  </td>
+
+  <td className="py-4 px-6">
+    <span className="text-gold font-bold">
+      {product.discountPrice || product.price} ج.م
+    </span>
+
+    {product.discountPrice > 0 && (
+      <span className="text-gold-muted text-xs line-through mr-2">
+        {product.price} ج.م
+      </span>
+    )}
+  </td>
+
+  <td className="py-4 px-6 text-cream text-sm">
+    {product.stock}
+  </td>
+
+  <td className="py-4 px-6">
+    <span
+      className={`px-3 py-1 rounded-full text-xs ${
+        product.isActive
+          ? "bg-green-500/20 text-green-400"
+          : "bg-red-500/20 text-red-400"
+      }`}
+    >
+      {product.isActive ? "نشط" : "غير نشط"}
+    </span>
+  </td>
+
+  <td className="py-4 px-6">
+    <div className="flex items-center gap-2">
+      <button
+        className="p-2 rounded-lg bg-gold/10 text-gold hover:bg-gold hover:text-black transition-all"
+        onClick={() => console.log("EDIT", product._id)}
+      >
+        <Edit2 size={16} />
+      </button>
+
+      <button
+        className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all"
+        onClick={() => console.log("DELETE", product._id)}
+      >
+        <Trash2 size={16} />
+      </button>
+    </div>
+  </td>
+</motion.tr>
+
+
+))}
+
+</tbody>
+
         </table>
       </div>
 
