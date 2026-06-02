@@ -72,6 +72,7 @@ const loadData = async () => {
       formData.discountPrice >= formData.price
     ) {
       toast.error("سعر الخصم يجب أن يكون أقل من السعر الأصلي");
+     
       return;
     }
 
@@ -112,6 +113,35 @@ const loadData = async () => {
   } catch (error) {
     console.error(error);
     toast.error("حدث خطأ أثناء حفظ المنتج");
+  }
+};
+ const handleDelete = async (id: string) => {
+  const confirmDelete = window.confirm(
+    "هل أنت متأكد من حذف المنتج؟"
+  );
+
+  if (!confirmDelete) return;
+
+  try {
+    const res = await fetch(`/api/products/${id}`, {
+      method: "DELETE",
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      toast.error(data.message || "فشل حذف المنتج");
+      return;
+    }
+
+    toast.success("تم حذف المنتج بنجاح");
+
+    setProducts((prev) =>
+      prev.filter((product) => product._id !== id)
+    );
+  } catch (error) {
+    console.error(error);
+    toast.error("حدث خطأ أثناء الحذف");
   }
 };
 
@@ -270,7 +300,8 @@ const loadData = async () => {
 
       <button
         className="p-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all"
-        onClick={() => console.log("DELETE", product._id)}
+        onClick={() => handleDelete(product._id)}
+        
       >
         <Trash2 size={16} />
       </button>
