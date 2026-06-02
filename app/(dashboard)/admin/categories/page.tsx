@@ -88,7 +88,7 @@ export default function AdminCategories() {
       });
 
       setIsModalOpen(false);
-
+      setEditingCategory(null);
       loadCategories();
     } catch (error) {
       console.error(error);
@@ -252,7 +252,7 @@ const handleEdit = (category: Category) => {
           >
             <div className="p-6 border-b border-gold/10">
               <h2 className="text-xl font-bold text-cream">
-                إضافة فئة جديدة
+            {editingCategory ? "تعديل الفئة" : "إضافة فئة جديدة"}
               </h2>
             </div>
 
