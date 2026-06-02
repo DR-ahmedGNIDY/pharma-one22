@@ -25,6 +25,8 @@ export default function AdminCategories() {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingCategory, setEditingCategory] =
+  useState<Category | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -89,6 +91,44 @@ export default function AdminCategories() {
       toast.error("حدث خطأ أثناء الحفظ");
     }
   };
+const handleDelete = async (id: string) => {
+  if (!window.confirm("هل أنت متأكد من حذف الفئة؟")) return;
+
+  try {
+    const res = await fetch(`/api/categories/${id}`, {
+      method: "DELETE",
+    });
+
+    const data = await res.json();
+
+    if (!data.success) {
+      toast.error(data.message || "فشل حذف الفئة");
+      return;
+    }
+
+    toast.success("تم حذف الفئة بنجاح");
+
+    setCategories((prev) =>
+      prev.filter((item) => item._id !== id)
+    );
+  } catch (error) {
+    console.error(error);
+    toast.error("حدث خطأ أثناء الحذف");
+  }
+};
+
+const handleEdit = (category: Category) => {
+  setEditingCategory(category);
+
+  setFormData({
+    name: category.name || "",
+    slug: category.slug || "",
+    description: category.description || "",
+    image: category.image || "",
+  });
+
+  setIsModalOpen(true);
+};
 
   const filteredCategories = categories.filter((category) =>
     category.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -166,11 +206,17 @@ export default function AdminCategories() {
                 </div>
 
                 <div className="flex gap-2">
-                  <button className="p-2 rounded-lg bg-gold/10 text-gold">
+                  <button
+                  onClick={() => handleEdit(category)}
+                  className="p-2 rounded-lg bg-gold/10 text-gold"
+                  >
                     <Edit2 size={14} />
                   </button>
 
-                  <button className="p-2 rounded-lg bg-red-500/10 text-red-400">
+                  <button
+                 onClick={() => handleDelete(category._id)}
+                 className="p-2 rounded-lg bg-red-500/10 text-red-400"
+                 >
                     <Trash2 size={14} />
                   </button>
                 </div>
