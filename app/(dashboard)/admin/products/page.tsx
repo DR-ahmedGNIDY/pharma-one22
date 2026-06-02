@@ -150,7 +150,7 @@ const loadData = async () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-cream mb-1">المنتجات</h1>
+          <h1 className="text-3xl font-bold text-cream mb-3">المنتجات</h1>
           <p className="text-gold-muted">إدارة منتجات المتجر</p>
         </div>
         <button
@@ -338,7 +338,7 @@ const loadData = async () => {
             <form onSubmit={handleSubmit} className="p-6 space-y-5">
               <div className="grid md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">اسم المنتج</label>
+                  <label className="block text-sm text-gold-light mb-4">اسم المنتج</label>
                   <input
                     type="text"
                     required
@@ -348,7 +348,7 @@ const loadData = async () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">SKU</label>
+                  <label className="block text-sm text-gold-light mb-4">SKU</label>
                   <input
                     type="text"
                     required
@@ -361,7 +361,7 @@ const loadData = async () => {
 
               <div className="grid md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">البراند</label>
+                  <label className="block text-sm text-gold-light mb-4">البراند</label>
                   <select
                     required
                     value={formData.brand}
@@ -378,7 +378,7 @@ const loadData = async () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">الفئة</label>
+                  <label className="block text-sm text-gold-light mb-4">الفئة</label>
                   <select
                     required
                     value={formData.category}
@@ -398,7 +398,7 @@ const loadData = async () => {
 
               <div className="grid md:grid-cols-3 gap-5">
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">السعر الأصلي</label>
+                  <label className="block text-sm text-gold-light mb-4">السعر الأصلي</label>
                   <input
                     type="number"
                     required
@@ -409,7 +409,7 @@ const loadData = async () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">سعر الخصم (اختياري)</label>
+                  <label className="block text-sm text-gold-light mb-4">سعر الخصم (اختياري)</label>
                   <input
                     type="number"
                     min="0"
@@ -419,7 +419,7 @@ const loadData = async () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">المخزون</label>
+                  <label className="block text-sm text-gold-light mb-4">المخزون</label>
                   <input
                     type="number"
                     required
@@ -449,7 +449,7 @@ const loadData = async () => {
               )}
 
               <div>
-                <label className="block text-sm text-gold-light mb-2">الوصف</label>
+                <label className="block text-sm text-gold-light mb-4">الوصف</label>
                 <textarea
                   rows={4}
                   value={formData.description}
@@ -459,9 +459,9 @@ const loadData = async () => {
               </div>
 
               <div>
-                <label className="block text-sm text-gold-light mb-2">صور المنتج</label>
+                <label className="block text-sm text-gold-light mb-4">صور المنتج</label>
                 <div>
-  <label className="block text-sm text-gold-light mb-2">
+  <label className="block text-sm text-gold-light mb-4">
     صور المنتج
   </label>
 

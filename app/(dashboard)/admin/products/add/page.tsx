@@ -321,7 +321,7 @@ const loadData = async () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <div className="flex items-center gap-3 mb-2">
+          <div className="flex items-center gap-3 mb-4">
             <Link
               href="/admin/products"
               className="p-2 rounded-lg bg-gold/10 text-gold hover:bg-gold hover:text-black transition-all"
@@ -373,7 +373,7 @@ const loadData = async () => {
 
               <div className="grid md:grid-cols-2 gap-5">
                 <div className="md:col-span-2">
-                  <label className="block text-sm text-gold-light mb-2">
+                  <label className="block text-sm text-gold-light mb-4">
                     اسم المنتج <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -391,7 +391,7 @@ const loadData = async () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">
+                  <label className="block text-sm text-gold-light mb-4">
                     البراند <span className="text-red-400">*</span>
                   </label>
                   <select
@@ -409,7 +409,7 @@ const loadData = async () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">
+                  <label className="block text-sm text-gold-light mb-4">
                     SKU <span className="text-red-400">*</span>
                   </label>
                   <div className="relative">
@@ -425,7 +425,7 @@ const loadData = async () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">
+                  <label className="block text-sm text-gold-light mb-4">
                     الفئة الرئيسية <span className="text-red-400">*</span>
                   </label>
                   <select
@@ -445,7 +445,7 @@ const loadData = async () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">الفئة الفرعية</label>
+                  <label className="block text-sm text-gold-light mb-4">الفئة الفرعية</label>
                   <select
                     value={formData.subCategory}
                     onChange={(e) => setFormData({ ...formData, subCategory: e.target.value })}
@@ -465,7 +465,7 @@ const loadData = async () => {
 
               {/* Product Status */}
               <div className="pt-4 border-t border-gold/10">
-                <label className="block text-sm text-gold-light mb-3">حالة المنتج</label>
+                <label className="block text-sm text-gold-light mb-4">حالة المنتج</label>
                 <div className="flex flex-wrap gap-3">
                   {[
                     { id: "isActive", label: "نشط", color: "green" },
@@ -507,7 +507,7 @@ const loadData = async () => {
 
               <div className="grid md:grid-cols-3 gap-5">
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">
+                  <label className="block text-sm text-gold-light mb-4">
                     السعر الأصلي <span className="text-red-400">*</span>
                   </label>
                   <div className="relative">
@@ -526,7 +526,7 @@ const loadData = async () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">
+                  <label className="block text-sm text-gold-light mb-4">
                     سعر الخصم <span className="text-gold-muted">(اختياري)</span>
                   </label>
                   <div className="relative">
@@ -547,7 +547,7 @@ const loadData = async () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">
+                  <label className="block text-sm text-gold-light mb-4">
                     المخزون <span className="text-red-400">*</span>
                   </label>
                   <div className="relative">
@@ -571,7 +571,7 @@ const loadData = async () => {
                 <h3 className="text-sm font-bold text-gold mb-3">معاينة السعر</h3>
                 <div className="flex items-center gap-6">
                   <div>
-                    <p className="text-xs text-gold-muted mb-1">السعر الأصلي</p>
+                    <p className="text-xs text-gold-muted mb-4">السعر الأصلي</p>
                     <p className="text-lg font-bold text-cream">
                       {formData.price > 0 ? `${formData.price} ج.م` : "--"}
                     </p>
@@ -580,7 +580,7 @@ const loadData = async () => {
                     <>
                       <div className="text-gold-muted">→</div>
                       <div>
-                        <p className="text-xs text-gold-muted mb-1">سعر الخصم</p>
+                        <p className="text-xs text-gold-muted mb-4">سعر الخصم</p>
                         <p className="text-lg font-bold text-gold">
                           {formData.discountPrice} ج.م
                         </p>

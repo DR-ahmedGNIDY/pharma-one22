@@ -85,7 +85,7 @@ export default function LoginPage() {
                       className="object-contain"
                     />
                   </div>
-                  <h1 className="text-2xl font-bold text-cream mb-1">
+                  <h1 className="text-2xl font-bold text-cream mb-2">
                     تسجيل الدخول
                   </h1>
                   <p className="text-sm text-gold-muted">

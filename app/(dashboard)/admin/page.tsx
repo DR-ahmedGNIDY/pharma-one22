@@ -88,7 +88,7 @@ export default function AdminDashboard() {
                 <span>{stat.change}</span>
               </div>
             </div>
-            <h3 className="text-gold-muted text-sm mb-1">{stat.title}</h3>
+            <h3 className="text-gold-muted text-sm mb-3">{stat.title}</h3>
             <p className="text-2xl font-bold text-cream">{stat.value}</p>
           </motion.div>
         ))}

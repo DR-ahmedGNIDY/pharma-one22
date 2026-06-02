@@ -362,7 +362,7 @@ return (
               </div>
             </div>
 
-            <h3 className="text-lg font-bold text-cream mb-2">
+            <h3 className="text-lg font-bold text-cream mb-4">
               {brand.name}
             </h3>
 
@@ -420,7 +420,7 @@ return (
             className="p-6 space-y-5"
           >
             <div>
-              <label className="block text-sm text-gold-light mb-2">
+              <label className="block text-sm text-gold-light mb-4">
                 اسم البراند
               </label>
 
@@ -442,7 +442,7 @@ return (
             </div>
 
             <div>
-              <label className="block text-sm text-gold-light mb-2">
+              <label className="block text-sm text-gold-light mb-4">
                 Slug
               </label>
 
@@ -460,7 +460,7 @@ return (
             </div>
 
             <div>
-              <label className="block text-sm text-gold-light mb-2">
+              <label className="block text-sm text-gold-light mb-4">
                 الوصف
               </label>
 
@@ -478,7 +478,7 @@ return (
             </div>
 
             <div>
-              <label className="block text-sm text-gold-light mb-2">
+              <label className="block text-sm text-gold-light mb-4">
                 الفئات
               </label>
 
@@ -509,7 +509,7 @@ return (
             </div>
 
             <div>
-              <label className="block text-sm text-gold-light mb-2">
+              <label className="block text-sm text-gold-light mb-4">
                 اللوجو
               </label>
 

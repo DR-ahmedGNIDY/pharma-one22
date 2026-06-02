@@ -115,7 +115,7 @@ export default function ContactPage() {
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">الاسم</label>
+                  <label className="block text-sm text-gold-light mb-3">الاسم</label>
                   <input
                     type="text"
                     required
@@ -125,7 +125,7 @@ export default function ContactPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">البريد الإلكتروني</label>
+                  <label className="block text-sm text-gold-light mb-3">البريد الإلكتروني</label>
                   <input
                     type="email"
                     required
@@ -197,7 +197,7 @@ export default function ContactPage() {
               <div className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
                 <MessageCircle className="text-green-400" size={36} />
               </div>
-              <h3 className="text-xl font-bold text-cream mb-2">تواصلي عبر واتساب</h3>
+              <h3 className="text-xl font-bold text-cream mb-3">تواصلي عبر واتساب</h3>
               <p className="text-gold-muted mb-6">
                 رد سريع مباشر على استفساراتك
               </p>

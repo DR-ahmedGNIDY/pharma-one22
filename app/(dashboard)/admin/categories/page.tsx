@@ -143,7 +143,7 @@ const handleEdit = (category: Category) => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-cream mb-1">
+          <h1 className="text-3xl font-bold text-cream mb-4">
             الفئات
           </h1>
           <p className="text-gold-muted">
@@ -226,7 +226,7 @@ const handleEdit = (category: Category) => {
                 </div>
               </div>
 
-              <h3 className="text-lg font-bold text-cream mb-2">
+              <h3 className="text-lg font-bold text-cream mb-4">
                 {category.name}
               </h3>
 
@@ -261,7 +261,7 @@ const handleEdit = (category: Category) => {
               className="p-6 space-y-5"
             >
               <div>
-                <label className="block text-sm text-gold-light mb-2">
+                <label className="block text-sm text-gold-light mb-4">
                   اسم الفئة
                 </label>
 
@@ -283,7 +283,7 @@ const handleEdit = (category: Category) => {
               </div>
 
               <div>
-                <label className="block text-sm text-gold-light mb-2">
+                <label className="block text-sm text-gold-light mb-4">
                   Slug
                 </label>
 
@@ -302,7 +302,7 @@ const handleEdit = (category: Category) => {
               </div>
 
               <div>
-                <label className="block text-sm text-gold-light mb-2">
+                <label className="block text-sm text-gold-light mb-4">
                   الوصف
                 </label>
 

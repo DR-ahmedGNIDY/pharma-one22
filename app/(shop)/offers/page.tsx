@@ -145,7 +145,7 @@ export default function OffersPage() {
           <div className="w-16 h-16 rounded-full bg-red-500/20 flex items-center justify-center mx-auto mb-4">
             <Percent className="text-red-400" size={32} />
           </div>
-          <span className="text-gold text-sm font-medium tracking-wider mb-2 block">
+          <span className="text-gold text-sm font-medium tracking-wider mb-4 block">
             SPECIAL OFFERS
           </span>
           <h1 className="text-4xl md:text-5xl font-bold text-cream mb-4">
@@ -182,8 +182,8 @@ export default function OffersPage() {
               </div>
 
               <div className="absolute bottom-0 right-0 p-6">
-                <p className="text-gold-light text-sm mb-1">{offer.subtitle}</p>
-                <h3 className="text-xl font-bold text-cream mb-2">{offer.title}</h3>
+                <p className="text-gold-light text-sm mb-3">{offer.subtitle}</p>
+                <h3 className="text-xl font-bold text-cream mb-4">{offer.title}</h3>
                 <p className="text-sm text-gold-muted mb-4">{offer.description}</p>
                 <div className="flex items-center gap-2 text-gold text-sm">
                   <Clock size={14} />
