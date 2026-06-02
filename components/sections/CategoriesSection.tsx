@@ -103,7 +103,7 @@ export function CategoriesSection() {
                   <h3 className="text-sm font-bold text-cream group-hover:text-gold-light transition-colors">
                     {category.name}
                   </h3>
-                  <p className="text-[10px] text-gold-muted mt-0.5">
+                  <p className="text-[10px] text-gold-muted mt-2">
                     {category.count.toLocaleString("ar-EG")} منتج
                   </p>
                 </div>
