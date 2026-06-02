@@ -419,15 +419,15 @@ ${product.name}
             <div className="grid grid-cols-3 gap-4 pt-6 border-t border-gold/10">
               <div className="text-center">
                 <Truck className="mx-auto text-gold mb-2" size={24} />
-                <p className="text-xs text-gold-muted">توصيل سريع</p>
+                <p className="text-lg text-gold-muted">توصيل سريع</p>
               </div>
               <div className="text-center">
                 <Shield className="mx-auto text-gold mb-2" size={24} />
-                <p className="text-xs text-gold-muted">منتج أصلي 100%</p>
+                <p className="text-lg text-gold-muted">100%</p>
               </div>
               <div className="text-center">
                 <RotateCcw className="mx-auto text-gold mb-2" size={24} />
-                <p className="text-xs text-gold-muted">استرجاع خلال 14 يوم</p>
+                <p className="text-lg text-gold-muted">استرجاع خلال 14 يوم</p>
               </div>
             </div>
           </div>

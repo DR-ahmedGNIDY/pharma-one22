@@ -69,8 +69,8 @@ export function CategoriesSection() {
           viewport={{ once: true }}
           className="text-center mb-6"
         >
-          <h2 className="text-xl md:text-2xl font-bold text-cream mb-1">تسوقي حسب الفئة</h2>
-          <p className="text-xs text-gold-muted">اكتشفي مجموعتنا الواسعة</p>
+          <h2 className="text-3xl md:text-5xl font-bold text-cream mb-2">تسوقي حسب الفئة</h2>
+          <p className="text-lg text-gold-muted">اكتشفي مجموعتنا الواسعة</p>
         </motion.div>
 
         {/* Categories Grid */}

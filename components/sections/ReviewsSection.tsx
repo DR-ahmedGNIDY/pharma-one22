@@ -61,8 +61,8 @@ export function ReviewsSection() {
           viewport={{ once: true }}
           className="text-center mb-6"
         >
-          <h2 className="text-xl md:text-2xl font-bold text-cream mb-1">آراء عملائنا</h2>
-          <p className="text-xs text-gold-muted">شاهدي ما تقوله عملائنا عن تجربة التسوق</p>
+          <h2 className="text-3xl md:text-5xl font-bold text-cream mb-2">آراء عملائنا</h2>
+          <p className="text-lg text-gold-muted">شاهدي ما تقوله عملائنا عن تجربة التسوق</p>
         </motion.div>
 
         {/* Reviews Carousel */}

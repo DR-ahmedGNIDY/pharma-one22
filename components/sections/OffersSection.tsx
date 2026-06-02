@@ -52,8 +52,8 @@ export function OffersSection() {
           viewport={{ once: true }}
           className="text-center mb-6"
         >
-          <h2 className="text-xl md:text-2xl font-bold text-cream mb-1">عروض مميزة</h2>
-          <p className="text-xs text-gold-muted">لا تفوتي فرصة الحصول على أفضل الأسعار</p>
+          <h2 className="text-3xl md:text-5xl font-bold text-cream mb-2">عروض مميزة</h2>
+          <p className="text-lg text-gold-muted">لا تفوتي فرصة الحصول على أفضل الأسعار</p>
         </motion.div>
 
         {/* Offers Grid */}
