@@ -79,7 +79,7 @@ export function ReviewsSection() {
               <div className="flex flex-col md:flex-row items-center gap-5">
                 {/* Avatar */}
                 <div className="shrink-0">
-                  <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-gold/20">
+                  <div className="relative w-24 h-24 rounded-full overflow-hidden border-2 border-gold/20">
                     <Image
                       src={reviews[currentIndex].avatar}
                       alt={reviews[currentIndex].name}
@@ -97,7 +97,7 @@ export function ReviewsSection() {
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        size={13}
+                        size={18}
                         className={
                           i < reviews[currentIndex].rating
                             ? "text-gold fill-gold"
@@ -107,15 +107,15 @@ export function ReviewsSection() {
                     ))}
                   </div>
 
-                  <p className="text-cream/85 text-sm leading-relaxed mb-3">
+                  <p className="text-cream/85 text-x1 leading-relaxed mb-4">
                     "{reviews[currentIndex].text}"
                   </p>
 
                   <div className="flex flex-col md:flex-row items-center gap-1 md:gap-2">
-                    <span className="font-bold text-gold text-sm">
+                    <span className="font-bold text-gold text-xl">
                       {reviews[currentIndex].name}
                     </span>
-                    <span className="text-gold-muted text-xs">
+                    <span className="text-gold-muted text-lg">
                       | {reviews[currentIndex].product}
                     </span>
                   </div>
@@ -128,9 +128,9 @@ export function ReviewsSection() {
           <div className="flex items-center justify-center gap-3 mt-4">
             <button
               onClick={prevReview}
-              className="w-7 h-7 rounded-full border border-gold/15 flex items-center justify-center text-gold/60 hover:border-gold/40 hover:text-gold transition-all"
+              className="w-12 h-12 rounded-full border border-gold/15 flex items-center justify-center text-gold/60 hover:border-gold/40 hover:text-gold transition-all"
             >
-              <ChevronRight size={14} />
+              <ChevronRight size={22} />
             </button>
 
             <div className="flex gap-1.5">
@@ -151,7 +151,7 @@ export function ReviewsSection() {
               onClick={nextReview}
               className="w-7 h-7 rounded-full border border-gold/15 flex items-center justify-center text-gold/60 hover:border-gold/40 hover:text-gold transition-all"
             >
-              <ChevronLeft size={14} />
+              <ChevronLeft size={22} />
             </button>
           </div>
         </div>
