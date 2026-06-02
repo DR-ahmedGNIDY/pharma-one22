@@ -42,7 +42,7 @@ export default function AccountPage() {
           <div className="lg:col-span-1">
             <div className="luxury-card p-6 sticky top-32">
               <div className="text-center mb-6">
-                <div className="w-20 h-20 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-3">
+                <div className="w-20 h-20 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
                   <User className="text-gold" size={32} />
                 </div>
                 <h2 className="font-bold text-cream">سارة أحمد</h2>
@@ -89,7 +89,7 @@ export default function AccountPage() {
                   transition={{ delay: index * 0.1 }}
                   className="luxury-card p-5 text-center"
                 >
-                  <stat.icon className="text-gold mx-auto mb-2" size={24} />
+                  <stat.icon className="text-gold mx-auto mb-4" size={24} />
                   <p className="text-2xl font-bold text-cream">{stat.value}</p>
                   <p className="text-xs text-gold-muted">{stat.label}</p>
                 </motion.div>

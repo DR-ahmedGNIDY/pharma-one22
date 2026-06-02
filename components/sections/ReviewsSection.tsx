@@ -61,7 +61,7 @@ export function ReviewsSection() {
           viewport={{ once: true }}
           className="text-center mb-6"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-cream mb-2">آراء عملائنا</h2>
+          <h2 className="text-3xl md:text-5xl font-bold text-cream mb-4">آراء عملائنا</h2>
           <p className="text-lg text-gold-muted">شاهدي ما تقوله عملائنا عن تجربة التسوق</p>
         </motion.div>
 
@@ -91,9 +91,9 @@ export function ReviewsSection() {
 
                 {/* Content */}
                 <div className="flex-1 text-center md:text-right">
-                  <Quote className="text-gold/15 mb-2 mx-auto md:mx-0" size={24} />
+                  <Quote className="text-gold/15 mb-4 mx-auto md:mx-0" size={24} />
 
-                  <div className="flex items-center justify-center md:justify-start gap-0.5 mb-2">
+                  <div className="flex items-center justify-center md:justify-start gap-0.5 mb-4">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}

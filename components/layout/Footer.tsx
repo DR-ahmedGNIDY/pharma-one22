@@ -92,7 +92,7 @@ export function Footer() {
         <div className="bg-gradient-to-r from-gold/10 to-transparent rounded-2xl p-8 md:p-12 border border-gold/20">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-right">
-              <h3 className="text-2xl font-bold gold-text mb-2">
+              <h3 className="text-2xl font-bold gold-text mb-4">
                 اشتركي في نشرتنا البريدية
               </h3>
               <p className="text-gold-muted">

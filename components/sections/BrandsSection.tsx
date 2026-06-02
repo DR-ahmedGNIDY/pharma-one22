@@ -77,7 +77,7 @@ export function BrandsSection({
             <div className="h-px w-20 bg-gradient-to-l from-transparent to-[#D4AF37]" />
           </div>
 
-          <h2 className="text-4xl md:text-5xl font-extrabold text-[#D4AF37] mb-3 drop-shadow-[0_0_20px_rgba(212,175,55,0.45)]">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-[#D4AF37] mb-4 drop-shadow-[0_0_20px_rgba(212,175,55,0.45)]">
             البراندات العالمية
           </h2>
 

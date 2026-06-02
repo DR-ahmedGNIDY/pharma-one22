@@ -176,7 +176,7 @@ const sortedProducts = [...filteredProducts].sort((a: any, b: any) => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-10"
         >
-          <h1 className="text-3xl md:text-4xl font-bold text-cream mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-cream mb-4">
             تسوقي الآن
           </h1>
           <p className="text-gold-muted">

@@ -82,7 +82,7 @@ export default function WishlistPage() {
       <div className="container-luxury">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-cream mb-2">المفضلة</h1>
+            <h1 className="text-3xl font-bold text-cream mb-4">المفضلة</h1>
             <p className="text-gold-muted">{wishlistProducts.length} منتج في المفضلة</p>
           </div>
         </div>

@@ -69,7 +69,7 @@ export function CartDrawer() {
                 {items.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full text-center">
                     <ShoppingBag size={64} className="text-gold/20 mb-4" />
-                    <p className="text-gold-muted text-lg mb-2">سلة التسوق فارغة</p>
+                    <p className="text-gold-muted text-lg mb-4">سلة التسوق فارغة</p>
                     <p className="text-gold-muted/60 text-sm mb-6">
                       ابدئي التسوق واكتشفي منتجاتنا المميزة
                     </p>
@@ -100,10 +100,10 @@ export function CartDrawer() {
                           />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-medium text-cream line-clamp-2 mb-1">
+                          <h4 className="text-sm font-medium text-cream line-clamp-2 mb-4">
                             {item.product.name}
                           </h4>
-                          <p className="text-gold text-sm font-bold mb-2">
+                          <p className="text-gold text-sm font-bold mb-4">
                             {formatPrice(item.product.discountPrice || item.product.price)}
                           </p>
                           <div className="flex items-center justify-between">

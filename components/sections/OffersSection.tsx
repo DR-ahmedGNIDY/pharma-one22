@@ -52,7 +52,7 @@ export function OffersSection() {
           viewport={{ once: true }}
           className="text-center mb-6"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-cream mb-2">عروض مميزة</h2>
+          <h2 className="text-3xl md:text-5xl font-bold text-cream mb-4">عروض مميزة</h2>
           <p className="text-lg text-gold-muted">لا تفوتي فرصة الحصول على أفضل الأسعار</p>
         </motion.div>
 
@@ -85,9 +85,9 @@ export function OffersSection() {
                     </div>
                   </div>
 
-                  <p className="text-gold-light/70 text-lg mb-2">{offer.subtitle}</p>
-                  <h3 className="text-3xl font-bold text-cream mb-2">{offer.title}</h3>
-                  <p className="text-gold text-5xl font-bold mb-3 gold-text">{offer.discount}</p>
+                  <p className="text-gold-light/70 text-lg mb-4">{offer.subtitle}</p>
+                  <h3 className="text-3xl font-bold text-cream mb-4">{offer.title}</h3>
+                  <p className="text-gold text-6xl md:text-7xl font-bold mb-4 gold-text">{offer.discount}</p>
                   <p className="text-gold-muted text-lg mb-4 line-clamp-2">{offer.description}</p>
 
                   <div className="flex items-center gap-2 text-gold text-lg group-hover:gap-3 transition-all">

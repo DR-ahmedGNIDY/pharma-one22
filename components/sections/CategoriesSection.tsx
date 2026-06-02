@@ -69,7 +69,7 @@ export function CategoriesSection() {
           viewport={{ once: true }}
           className="text-center mb-6"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-cream mb-2">تسوقي حسب الفئة</h2>
+          <h2 className="text-3xl md:text-5xl font-bold text-cream mb-4">تسوقي حسب الفئة</h2>
           <p className="text-lg text-gold-muted">اكتشفي مجموعتنا الواسعة</p>
         </motion.div>
 
@@ -97,7 +97,7 @@ export function CategoriesSection() {
                 <div className="absolute inset-0 bg-gold/0 group-hover:bg-gold/10 transition-colors duration-500" />
 
                 <div className="absolute inset-0 flex flex-col items-center justify-end p-3 pb-4">
-                  <div className="w-9 h-9 rounded-full bg-gold/15 backdrop-blur-sm flex items-center justify-center mb-2 group-hover:bg-gold/25 transition-colors">
+                  <div className="w-9 h-9 rounded-full bg-gold/15 backdrop-blur-sm flex items-center justify-center mb-4 group-hover:bg-gold/25 transition-colors">
                     <category.icon className="text-gold" size={16} />
                   </div>
                   <h3 className="text-sm font-bold text-cream group-hover:text-gold-light transition-colors">

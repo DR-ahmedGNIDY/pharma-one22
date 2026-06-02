@@ -195,7 +195,7 @@ ${window.location.origin}/product/${product.slug}
           {/* Info */}
           <div className="p-4">
 
-            <p className="text-xs text-gold-muted mb-1">
+            <p className="text-xs text-gold-muted mb-4">
               {typeof product.brand === "string"
                 ? product.brand
                 : product.brand.name}
@@ -206,7 +206,7 @@ ${window.location.origin}/product/${product.slug}
               className="
                 text-sm
                 text-cream
-                mb-2
+                mb-4
                 line-clamp-2
                 group-hover:text-gold
               "
@@ -216,7 +216,7 @@ ${window.location.origin}/product/${product.slug}
 
 
             {/* Rating */}
-            <div className="flex items-center gap-1 mb-3">
+            <div className="flex items-center gap-1 mb-4">
 
               {[...Array(5)].map((_, i) => (
                 <Star
@@ -238,7 +238,7 @@ ${window.location.origin}/product/${product.slug}
 
 
             {/* Price */}
-            <div className="mb-3">
+            <div className="mb-4">
 
               <span className="text-lg font-bold text-gold">
 
