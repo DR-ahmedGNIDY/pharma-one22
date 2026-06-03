@@ -232,7 +232,7 @@ if (file.size > maxSize) {
   );
 }
     } catch {
-      toast.error("حدث خطأ أثناء الرفع", {
+      toast.error(" حدث خطأ أثناء الرفع ومن المحتمل حجم الصور اكبر من 2 ميجا", {
         id: "upload",
       });
     }
