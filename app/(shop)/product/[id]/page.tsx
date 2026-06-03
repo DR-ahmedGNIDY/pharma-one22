@@ -39,8 +39,12 @@ const [similarProducts, setSimilarProducts] = useState<any[]>([]);
 const [selectedImage, setSelectedImage] = useState(0);
 const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<"description" | "specs" | "reviews">("description");
-  
-const slug = params.slug as string;
+  const addItem = useCartStore((state) => state.addItem);
+  const toggleWishlist = useWishlistStore((state) => state.toggleItem);
+const isInWishlist = useWishlistStore(
+  (state) => state.isInWishlist
+)(product?._id);
+  const slug = params.slug as string;
 
 const loadSimilarProducts = async (categoryId: string) => {
   try {
@@ -110,9 +114,7 @@ if (!product) {
   );
 }
 
-const addItem = useCartStore((state) => state.addItem);
-  const toggleWishlist = useWishlistStore((state) => state.toggleItem);
-  const isInWishlist = useWishlistStore((state) => state.isInWishlist)(product._id);
+
 
   const hasDiscount = product.discountPercentage && product.discountPercentage > 0;
   const brandName = typeof product.brand === "string" ? product.brand : product.brand.name;
