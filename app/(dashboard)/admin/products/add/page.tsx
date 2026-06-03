@@ -224,10 +224,13 @@ if (file.size > maxSize) {
           id: "upload",
         });
       } else {
-        toast.error("فشل رفع الصورة", {
-          id: "upload",
-        });
-      }
+  toast.error(
+    data.message || "حجم الصورة يجب ألا يتجاوز 2 ميجابايت",
+    {
+      id: "upload",
+    }
+  );
+}
     } catch {
       toast.error("حدث خطأ أثناء الرفع", {
         id: "upload",
