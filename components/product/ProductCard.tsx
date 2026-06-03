@@ -204,7 +204,7 @@ ${window.location.origin}/product/${product.slug}
 
             <h3
               className="
-                text-sm
+                text-x2
                 text-cream
                 mb-4
                 line-clamp-2
