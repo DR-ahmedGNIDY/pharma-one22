@@ -108,7 +108,25 @@ ${window.location.origin}/product/${product.slug}
 
           {/* Image */}
           <div className="relative aspect-square overflow-hidden rounded-t-2xl">
-
+{hasDiscount && (
+  <div
+    className="
+      absolute
+      top-3
+      right-3
+      z-10
+      bg-red-600
+      text-white
+      px-3
+      py-1
+      rounded-full
+      text-sm
+      font-bold
+    "
+  >
+    -{discountPercentage}%
+  </div>
+)}
             <Image
               src={
                 product.images[0] ||
@@ -241,18 +259,33 @@ ${window.location.origin}/product/${product.slug}
 
 
             {/* Price */}
-            <div className="mb-4">
+            <div className="mb-4 flex flex-col gap-1">
 
-              <span className="text-x2 font-bold text-gold">
+  {hasDiscount && (
+    <span
+      className="
+        text-lg
+        text-gold-muted
+        line-through
+      "
+    >
+      {formatPrice(product.price)}
+    </span>
+  )}
 
-                {formatPrice(
-                  product.discountPrice ||
-                    product.price
-                )}
+  <span
+    className="
+      text-3xl
+      font-bold
+      text-gold
+    "
+  >
+    {formatPrice(
+      product.discountPrice || product.price
+    )}
+  </span>
 
-              </span>
-
-            </div>
+</div>
 
 
             {/* Cart */}
