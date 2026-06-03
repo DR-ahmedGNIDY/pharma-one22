@@ -27,128 +27,13 @@ import { useCartStore, useWishlistStore } from "@/hooks/useStore";
 import toast from "react-hot-toast";
 
 // Demo product data
-const demoProducts: Record<string, Product> = {
-  "huda-beauty-new-nude-eyeshadow": {
-    _id: "1",
-    name: "HUDA BEAUTY The New Nude Eyeshadow Palette",
-    slug: "huda-beauty-new-nude-eyeshadow",
-    brand: { _id: "b1", name: "HUDA BEAUTY", slug: "huda-beauty", logo: "", categories: [], isActive: true, order: 1 },
-    category: { _id: "c1", name: "المكياج", slug: "makeup", isActive: true, order: 1 },
-    images: [
-      "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&q=80",
-      "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=800&q=80",
-      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&q=80",
-      "https://images.unsplash.com/photo-1571875257727-256c39da42af?w=800&q=80",
-    ],
-    description: `باليت ظلال عيون نيود من هدى بيوتي - The New Nude Eyeshadow Palette
 
-مميزات المنتج:
-• 18 لون متنوع من الظلال العيون
-• تركيبة فائقة النعومة والتصاق
-• ألوان نيود متنوعة تناسب جميع المناسبات
-• مزيج من الألوان المطفية واللامعة
-• تركيبة طويلة الأمد تدوم طوال اليوم
-• خالية من الكريولين والبارابين
 
-طريقة الاستخدام:
-استخدمي فرشاة ظلال العيون لوضع اللون الأساسي على الجفن المتحرك، ثم أضيفي لون أغمق في الطية لإضافة العمق. استخدمي الألوان اللامعة في وسط الجفن لإضافة لمسة لامعة.`,
-    shortDescription: "باليت ظلال عيون نيود فاخر بـ 18 لون متنوع",
-    price: 1850,
-    discountPrice: 1480,
-    discountPercentage: 20,
-    stock: 50,
-    sku: "HB-001",
-    rating: 4.8,
-    reviewCount: 1250,
-    isActive: true,
-    isFeatured: true,
-    isNewArrival: false,
-    isBestSeller: true,
-    tags: ["مكياج", "ظلال عيون", "نيود", "هدى بيوتي"],
-    specifications: [
-      { key: "النوع", value: "باليت ظلال عيون" },
-      { key: "عدد الألوان", value: "18 لون" },
-      { key: "التركيبة", value: "مطفية ولامعة" },
-      { key: "الوزن", value: "19.7 جرام" },
-      { key: "بلد الصنع", value: "إيطاليا" },
-      { key: "مدة الصلاحية", value: "36 شهر" },
-    ],
-    createdAt: "2024-01-01",
-  },
-};
-
-const similarProducts: Product[] = [
-  {
-    _id: "3",
-    name: "L'Oréal Paris Infallible 24H Fresh Wear Foundation",
-    slug: "loreal-infallible-foundation",
-    brand: { _id: "b3", name: "L'Oréal", slug: "loreal", logo: "", categories: [], isActive: true, order: 3 },
-    category: { _id: "c1", name: "المكياج", slug: "makeup", isActive: true, order: 1 },
-    images: ["https://images.unsplash.com/photo-1631729371254-42c2892f0e6e?w=400&q=80"],
-    description: "كريم أساس إنفاليبل 24 ساعة",
-    price: 350,
-    discountPrice: 280,
-    discountPercentage: 20,
-    stock: 75,
-    sku: "LO-001",
-    rating: 4.7,
-    reviewCount: 850,
-    isActive: true,
-    isFeatured: true,
-    isNewArrival: false,
-    isBestSeller: true,
-    tags: ["مكياج", "كريم أساس"],
-    specifications: [],
-    createdAt: "2024-01-01",
-  },
-  {
-    _id: "4",
-    name: "MAC Cosmetics Matte Lipstick - Ruby Woo",
-    slug: "mac-matte-lipstick-ruby-woo",
-    brand: { _id: "b4", name: "MAC", slug: "mac", logo: "", categories: [], isActive: true, order: 4 },
-    category: { _id: "c1", name: "المكياج", slug: "makeup", isActive: true, order: 1 },
-    images: ["https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=400&q=80"],
-    description: "أحمر شفاه ماتي ماك",
-    price: 495,
-    discountPrice: 396,
-    discountPercentage: 20,
-    stock: 60,
-    sku: "MAC-001",
-    rating: 4.9,
-    reviewCount: 2100,
-    isActive: true,
-    isFeatured: true,
-    isNewArrival: false,
-    isBestSeller: true,
-    tags: ["مكياج", "أحمر شفاه"],
-    specifications: [],
-    createdAt: "2024-01-01",
-  },
-  {
-    _id: "7",
-    name: "Dior Addict Lip Glow",
-    slug: "dior-addict-lip-glow",
-    brand: { _id: "b7", name: "DIOR", slug: "dior", logo: "", categories: [], isActive: true, order: 7 },
-    category: { _id: "c1", name: "المكياج", slug: "makeup", isActive: true, order: 1 },
-    images: ["https://images.unsplash.com/photo-1625093742435-6fa192b6fb10?w=400&q=80"],
-    description: "ملمع شفاه ديور أديكت",
-    price: 850,
-    stock: 25,
-    sku: "DIOR-001",
-    rating: 4.9,
-    reviewCount: 450,
-    isActive: true,
-    isFeatured: false,
-    isNewArrival: true,
-    isBestSeller: false,
-    tags: ["مكياج", "ملمع شفاه"],
-    specifications: [],
-    createdAt: "2024-12-01",
-  },
-];
 
 export default function ProductDetailPage() {
   const params = useParams();
+const [product, setProduct] = useState<any>(null);
+const [loading, setLoading] = useState(true);
   const slug = params.id as string;
   const product = demoProducts[slug] || demoProducts["huda-beauty-new-nude-eyeshadow"];
 
