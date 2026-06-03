@@ -100,10 +100,10 @@ export function CategoriesSection() {
                   <div className="w-9 h-9 rounded-full bg-gold/15 backdrop-blur-sm flex items-center justify-center mb-4 group-hover:bg-gold/25 transition-colors">
                     <category.icon className="text-gold" size={16} />
                   </div>
-                  <h3 className="text-sm font-bold text-cream group-hover:text-gold-light transition-colors">
+                  <h3 className="text-2xl font-bold text-cream group-hover:text-gold-light transition-colors">
                     {category.name}
                   </h3>
-                  <p className="text-[10px] text-gold-muted mt-2">
+                  <p className="text-lg text-gold-muted mt-2">
                     {category.count.toLocaleString("ar-EG")} منتج
                   </p>
                 </div>
