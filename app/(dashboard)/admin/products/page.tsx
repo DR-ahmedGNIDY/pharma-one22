@@ -508,7 +508,7 @@ const loadData = async () => {
           });
         }
       } catch {
-        toast.error("حدث خطأ أثناء الرفع", {
+        toast.error("حدث خطأ أثناء الرفع محتمل ان حجم الصورة اكثر من 2 ميجا", {
           id: "upload",
         });
       }
