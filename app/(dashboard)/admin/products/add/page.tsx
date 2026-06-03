@@ -190,10 +190,7 @@ const loadData = async () => {
 
   const maxSize = 2 * 1024 * 1024; // 2MB
 
-if (file.size > maxSize) {
-  toast.error("حجم الصورة يجب ألا يتجاوز 2 ميجابايت");
-  return;
-}
+
 
   const reader = new FileReader();
 
