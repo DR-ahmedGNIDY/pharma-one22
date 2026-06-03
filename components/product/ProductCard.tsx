@@ -230,7 +230,7 @@ ${window.location.origin}/product/${product.slug}
                 />
               ))}
 
-              <span className="text-xs text-gold-muted">
+              <span className="text-x1 text-gold-muted">
                 ({product.reviewCount})
               </span>
 
@@ -240,7 +240,7 @@ ${window.location.origin}/product/${product.slug}
             {/* Price */}
             <div className="mb-4">
 
-              <span className="text-x1 font-bold text-gold">
+              <span className="text-x2 font-bold text-gold">
 
                 {formatPrice(
                   product.discountPrice ||
