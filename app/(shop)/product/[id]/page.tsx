@@ -44,7 +44,7 @@ const [quantity, setQuantity] = useState(1);
 const isInWishlist = useWishlistStore(
   (state) => state.isInWishlist
 )(product?._id);
-  const slug = params.slug as string;
+  const id = params.id as string;
 
 const loadSimilarProducts = async (categoryId: string) => {
   try {
@@ -73,7 +73,7 @@ const loadSimilarProducts = async (categoryId: string) => {
 
 const loadProduct = async () => {
   try {
-    const res = await fetch(`/api/products/slug/${slug}`);
+    const res = await fetch(`/api/products/${id}`);
     const data = await res.json();
 
     if (data.success) {
@@ -91,10 +91,10 @@ const loadProduct = async () => {
 };
 
 useEffect(() => {
-  if (slug) {
+  if (id) {
     loadProduct();
   }
-}, [slug]);
+}, [id]);
   const [isZoomed, setIsZoomed] = useState(false);
 
 

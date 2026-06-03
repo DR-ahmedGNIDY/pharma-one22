@@ -98,7 +98,7 @@ ${window.location.origin}/product/${product.slug}
       className="group"
     >
 
-      <Link href={`/product/${product.slug}`}>
+      <Link href={`/product/${product._id}`}>
 
         <div
           className="luxury-card relative"
