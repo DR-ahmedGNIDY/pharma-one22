@@ -195,7 +195,7 @@ ${window.location.origin}/product/${product.slug}
           {/* Info */}
           <div className="p-4">
 
-            <p className="text-xs text-gold-muted mb-4">
+            <p className="text-x1 text-gold-muted mb-4">
               {typeof product.brand === "string"
                 ? product.brand
                 : product.brand.name}
@@ -221,7 +221,7 @@ ${window.location.origin}/product/${product.slug}
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  size={12}
+                  size={14}
                   className={
                     i < Math.floor(product.rating)
                       ? "text-gold fill-gold"
@@ -230,7 +230,7 @@ ${window.location.origin}/product/${product.slug}
                 />
               ))}
 
-              <span className="text-x1 text-gold-muted">
+              <span className="text-x2 text-gold-muted">
                 ({product.reviewCount})
               </span>
 
