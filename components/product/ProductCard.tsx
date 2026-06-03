@@ -193,25 +193,26 @@ ${window.location.origin}/product/${product.slug}
 
 
           {/* Info */}
-          <h3
-              className="
-                text-x2
-                text-cream
-                mb-4
-                line-clamp-2
-                group-hover:text-gold
-              "
-            >
-              {product.name}
-            </h3>
-            
-          <div className="p-4">
+<div className="p-4">
 
-            <p className="text-x1 text-gold-muted mb-4">
-              {typeof product.brand === "string"
-                ? product.brand
-                : product.brand.name}
-            </p>
+  <h3
+    className="
+      text-2xl
+      font-semibold
+      text-cream
+      mb-2
+      line-clamp-2
+      group-hover:text-gold
+    "
+  >
+    {product.name}
+  </h3>
+
+  <p className="text-lg text-gold-muted mb-4">
+    {typeof product.brand === "string"
+      ? product.brand
+      : product.brand.name}
+  </p>
 
 
             
