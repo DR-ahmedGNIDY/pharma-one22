@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -31,18 +31,86 @@ import toast from "react-hot-toast";
 
 
 export default function ProductDetailPage() {
-  const params = useParams();
+const params = useParams();
+
 const [product, setProduct] = useState<any>(null);
 const [loading, setLoading] = useState(true);
-  const slug = params.id as string;
-  const product = demoProducts[slug] || demoProducts["huda-beauty-new-nude-eyeshadow"];
-
-  const [selectedImage, setSelectedImage] = useState(0);
-  const [quantity, setQuantity] = useState(1);
+const [similarProducts, setSimilarProducts] = useState<any[]>([]);
+const [selectedImage, setSelectedImage] = useState(0);
+const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState<"description" | "specs" | "reviews">("description");
+  
+const slug = params.slug as string;
+
+const loadSimilarProducts = async (categoryId: string) => {
+  try {
+    const res = await fetch("/api/products");
+    const data = await res.json();
+
+    if (data.success) {
+      const filtered = data.products
+        .filter(
+          (p: any) =>
+            p._id !== product?._id &&
+            (
+              typeof p.category === "object"
+                ? p.category?._id === categoryId
+                : p.category === categoryId
+            )
+        )
+        .slice(0, 4);
+
+      setSimilarProducts(filtered);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const loadProduct = async () => {
+  try {
+    const res = await fetch(`/api/products/slug/${slug}`);
+    const data = await res.json();
+
+    if (data.success) {
+      setProduct(data.product);
+
+      if (data.product?.category?._id) {
+        loadSimilarProducts(data.product.category._id);
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  if (slug) {
+    loadProduct();
+  }
+}, [slug]);
   const [isZoomed, setIsZoomed] = useState(false);
 
-  const addItem = useCartStore((state) => state.addItem);
+
+if (loading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center text-white">
+      جاري تحميل المنتج...
+    </div>
+  );
+}
+
+if (!product) {
+  return (
+    <div className="min-h-screen flex items-center justify-center text-white">
+      المنتج غير موجود
+    </div>
+  );
+}
+
+const addItem = useCartStore((state) => state.addItem);
   const toggleWishlist = useWishlistStore((state) => state.toggleItem);
   const isInWishlist = useWishlistStore((state) => state.isInWishlist)(product._id);
 
@@ -98,7 +166,7 @@ ${product.name}
                 className="relative w-full h-full"
               >
                 <Image
-                  src={product.images[selectedImage]}
+                  src={product.images?.[selectedImage] || "/placeholder.jpg"}
                   alt={product.name}
                   fill
                   className="object-cover"
@@ -142,7 +210,7 @@ ${product.name}
 
             {/* Thumbnails */}
             <div className="flex gap-3 overflow-x-auto pb-2">
-              {product.images.map((image, index) => (
+              {product.images?.map((image: string, index: number) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImage(index)}
@@ -358,7 +426,8 @@ ${product.name}
 
               {activeTab === "specs" && (
                 <div className="grid md:grid-cols-2 gap-4">
-                  {product.specifications.map((spec, index) => (
+                  {product.specifications?.map(
+  (spec: any, index: number) => (
                     <div
                       key={index}
                       className="flex items-center justify-between p-4 bg-black rounded-xl"
