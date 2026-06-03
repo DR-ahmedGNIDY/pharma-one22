@@ -193,16 +193,7 @@ ${window.location.origin}/product/${product.slug}
 
 
           {/* Info */}
-          <div className="p-4">
-
-            <p className="text-x1 text-gold-muted mb-4">
-              {typeof product.brand === "string"
-                ? product.brand
-                : product.brand.name}
-            </p>
-
-
-            <h3
+          <h3
               className="
                 text-x2
                 text-cream
@@ -213,6 +204,17 @@ ${window.location.origin}/product/${product.slug}
             >
               {product.name}
             </h3>
+            
+          <div className="p-4">
+
+            <p className="text-x1 text-gold-muted mb-4">
+              {typeof product.brand === "string"
+                ? product.brand
+                : product.brand.name}
+            </p>
+
+
+            
 
 
             {/* Rating */}
