@@ -240,7 +240,7 @@ ${window.location.origin}/product/${product.slug}
             {/* Price */}
             <div className="mb-4">
 
-              <span className="text-lg font-bold text-gold">
+              <span className="text-x1 font-bold text-gold">
 
                 {formatPrice(
                   product.discountPrice ||
