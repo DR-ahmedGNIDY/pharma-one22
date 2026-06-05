@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Product from "@/models/Product";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 function slugify(text: string) {
   return text
@@ -11,6 +12,9 @@ function slugify(text: string) {
 }
 
 export async function POST(req: NextRequest) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
+
   try {
     await dbConnect();
 
@@ -26,6 +30,7 @@ export async function POST(req: NextRequest) {
       stock,
       sku,
       images,
+      isOffer,
     } = body;
 
     if (
@@ -67,6 +72,7 @@ export async function POST(req: NextRequest) {
       sku,
       images: images || [],
       isActive: true,
+      isOffer: isOffer ?? false,
       rating: 0,
       reviewCount: 0,
       tags: [],
@@ -90,11 +96,17 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     await dbConnect();
 
-    const products = await Product.find()
+    const { searchParams } = new URL(req.url);
+    const isOffer = searchParams.get("isOffer");
+
+    const filter: Record<string, unknown> = {};
+    if (isOffer === "true") filter.isOffer = true;
+
+    const products = await Product.find(filter)
       .sort({ createdAt: -1 })
       .populate("brand")
       .populate("category");

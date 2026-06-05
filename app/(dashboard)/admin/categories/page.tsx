@@ -2,13 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Plus,
-  Search,
-  Edit2,
-  Trash2,
-  Image as ImageIcon,
-} from "lucide-react";
+import { Search, Trash2, Image as ImageIcon } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface Category {
@@ -24,16 +18,6 @@ export default function AdminCategories() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingCategory, setEditingCategory] =
-  useState<Category | null>(null);
-
-  const [formData, setFormData] = useState({
-    name: "",
-    slug: "",
-    description: "",
-    image: "",
-  });
 
   const loadCategories = async () => {
     try {
@@ -55,84 +39,29 @@ export default function AdminCategories() {
     loadCategories();
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("هل أنت متأكد من حذف الفئة؟")) return;
 
     try {
-      const res = await fetch(
-  editingCategory
-    ? `/api/categories/${editingCategory._id}`
-    : "/api/categories",
-  {
-    method: editingCategory ? "PUT" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      const res = await fetch(`/api/categories/${id}`, {
+        method: "DELETE",
       });
 
       const data = await res.json();
 
       if (!data.success) {
-        toast.error(data.message || "فشل إضافة الفئة");
+        toast.error(data.message || "فشل حذف الفئة");
         return;
       }
 
-      toast.success("تم إضافة الفئة بنجاح");
+      toast.success("تم حذف الفئة بنجاح");
 
-      setFormData({
-        name: "",
-        slug: "",
-        description: "",
-        image: "",
-      });
-
-      setIsModalOpen(false);
-      setEditingCategory(null);
-      loadCategories();
+      setCategories((prev) => prev.filter((item) => item._id !== id));
     } catch (error) {
       console.error(error);
-      toast.error("حدث خطأ أثناء الحفظ");
+      toast.error("حدث خطأ أثناء الحذف");
     }
   };
-const handleDelete = async (id: string) => {
-  if (!window.confirm("هل أنت متأكد من حذف الفئة؟")) return;
-
-  try {
-    const res = await fetch(`/api/categories/${id}`, {
-      method: "DELETE",
-    });
-
-    const data = await res.json();
-
-    if (!data.success) {
-      toast.error(data.message || "فشل حذف الفئة");
-      return;
-    }
-
-    toast.success("تم حذف الفئة بنجاح");
-
-    setCategories((prev) =>
-      prev.filter((item) => item._id !== id)
-    );
-  } catch (error) {
-    console.error(error);
-    toast.error("حدث خطأ أثناء الحذف");
-  }
-};
-
-const handleEdit = (category: Category) => {
-  setEditingCategory(category);
-
-  setFormData({
-    name: category.name || "",
-    slug: category.slug || "",
-    description: category.description || "",
-    image: category.image || "",
-  });
-
-  setIsModalOpen(true);
-};
 
   const filteredCategories = categories.filter((category) =>
     category.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -143,21 +72,9 @@ const handleEdit = (category: Category) => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-cream mb-4">
-            الفئات
-          </h1>
-          <p className="text-gold-muted">
-            إدارة فئات المتجر
-          </p>
+          <h1 className="text-3xl font-bold text-cream mb-4">الفئات</h1>
+          <p className="text-gold-muted">إدارة فئات المتجر</p>
         </div>
-
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="btn-gold flex items-center gap-2"
-        >
-          <Plus size={18} />
-          <span>إضافة فئة</span>
-        </button>
       </div>
 
       {/* Search */}
@@ -167,7 +84,6 @@ const handleEdit = (category: Category) => {
             className="absolute right-4 top-1/2 -translate-y-1/2 text-gold-muted"
             size={18}
           />
-
           <input
             type="text"
             placeholder="البحث في الفئات..."
@@ -181,9 +97,7 @@ const handleEdit = (category: Category) => {
       {/* Categories Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {loading ? (
-          <div className="text-gold">
-            جاري التحميل...
-          </div>
+          <div className="text-gold">جاري التحميل...</div>
         ) : (
           filteredCategories.map((category, index) => (
             <motion.div
@@ -202,25 +116,15 @@ const handleEdit = (category: Category) => {
                       className="w-full h-full object-cover rounded-xl"
                     />
                   ) : (
-                    <ImageIcon
-                      className="text-gold"
-                      size={24}
-                    />
+                    <ImageIcon className="text-gold" size={24} />
                   )}
                 </div>
 
                 <div className="flex gap-2">
                   <button
-                  onClick={() => handleEdit(category)}
-                  className="p-2 rounded-lg bg-gold/10 text-gold"
+                    onClick={() => handleDelete(category._id)}
+                    className="p-2 rounded-lg bg-red-500/10 text-red-400"
                   >
-                    <Edit2 size={14} />
-                  </button>
-
-                  <button
-                 onClick={() => handleDelete(category._id)}
-                 className="p-2 rounded-lg bg-red-500/10 text-red-400"
-                 >
                     <Trash2 size={14} />
                   </button>
                 </div>
@@ -234,101 +138,11 @@ const handleEdit = (category: Category) => {
                 {category.description || "لا يوجد وصف"}
               </p>
 
-              <div className="text-xs text-gold">
-                {category.slug}
-              </div>
+              <div className="text-xs text-gold">{category.slug}</div>
             </motion.div>
           ))
         )}
       </div>
-
-      {/* Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-black-light border border-gold/20 rounded-2xl w-full max-w-lg"
-          >
-            <div className="p-6 border-b border-gold/10">
-              <h2 className="text-xl font-bold text-cream">
-            {editingCategory ? "تعديل الفئة" : "إضافة فئة جديدة"}
-              </h2>
-            </div>
-
-            <form
-              onSubmit={handleSubmit}
-              className="p-6 space-y-5"
-            >
-              <div>
-                <label className="block text-sm text-gold-light mb-4">
-                  اسم الفئة
-                </label>
-
-                <input
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      name: e.target.value,
-                      slug: e.target.value
-                        .toLowerCase()
-                        .replace(/\s+/g, "-"),
-                    })
-                  }
-                  className="w-full bg-black border border-gold/20 rounded-xl py-3 px-4 text-cream"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm text-gold-light mb-4">
-                  Slug
-                </label>
-
-                <input
-                  type="text"
-                  required
-                  value={formData.slug}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      slug: e.target.value,
-                    })
-                  }
-                  className="w-full bg-black border border-gold/20 rounded-xl py-3 px-4 text-cream"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm text-gold-light mb-4">
-                  الوصف
-                </label>
-
-                <textarea
-                  rows={3}
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      description: e.target.value,
-                    })
-                  }
-                  className="w-full bg-black border border-gold/20 rounded-xl py-3 px-4 text-cream"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full btn-gold py-3"
-              >
-                حفظ الفئة
-              </button>
-            </form>
-          </motion.div>
-        </div>
-      )}
     </div>
   );
 }

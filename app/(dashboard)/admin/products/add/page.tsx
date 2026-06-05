@@ -41,6 +41,7 @@ interface ProductForm {
   isNewArrival: boolean;
   isBestSeller: boolean;
   isActive: boolean;
+  isOffer: boolean;
   specifications: { key: string; value: string }[];
 }
 
@@ -80,6 +81,7 @@ export default function AddProductPage() {
     isNewArrival: false,
     isBestSeller: false,
     isActive: true,
+    isOffer: false,
     specifications: [{ key: "", value: "" }],
   });
 
@@ -293,6 +295,7 @@ if (file.size > maxSize) {
         stock: formData.stock,
         sku: formData.sku,
         images,
+        isOffer: formData.isOffer,
       }),
     });
 
@@ -482,6 +485,7 @@ if (file.size > maxSize) {
                     { id: "isFeatured", label: "مميز", color: "gold" },
                     { id: "isNewArrival", label: "وصل حديثاً", color: "blue" },
                     { id: "isBestSeller", label: "الأكثر مبيعاً", color: "purple" },
+                    { id: "isOffer", label: "عروض", color: "red" },
                   ].map((status) => (
                     <button
                       key={status.id}

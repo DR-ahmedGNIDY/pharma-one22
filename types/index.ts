@@ -65,6 +65,7 @@ export interface Product {
   isFeatured: boolean;
   isNewArrival: boolean;
   isBestSeller: boolean;
+  isOffer?: boolean;
   tags: string[];
   specifications: { key: string; value: string }[];
   createdAt: string;

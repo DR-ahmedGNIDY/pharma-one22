@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Percent, Clock, ArrowRight, Gift, Flame } from "lucide-react";
+import { Percent, Clock, Gift, Flame } from "lucide-react";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Product } from "@/types";
+import { useEffect, useState } from "react";
 
 const featuredOffers = [
   {
@@ -13,7 +13,8 @@ const featuredOffers = [
     title: "عروض نهاية الأسبوع",
     subtitle: "خصومات تصل إلى 50%",
     description: "اكتشفي أفضل العروض على منتجات المكياج والعناية بالبشرة",
-    image: "https://images.unsplash.com/photo-1612817288484-6f916006741a?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1612817288484-6f916006741a?w=800&q=80",
     endDate: "2024-12-31",
     badge: "محدودة",
   },
@@ -22,7 +23,8 @@ const featuredOffers = [
     title: "اشترِ 1 واحصلي على 1 مجاناً",
     subtitle: "على منتجات مختارة",
     description: "اختيارك المثالي للهدايا أو لتجديد مخزونك الشخصي",
-    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&q=80",
     endDate: "2024-12-25",
     badge: "BOGO",
   },
@@ -31,108 +33,27 @@ const featuredOffers = [
     title: "تخفيضات العطور",
     subtitle: "خصم 30% على كل العطور",
     description: "فرصة ذهبية لامتلاك أرقى العطور العالمية بأسعار مميزة",
-    image: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&q=80",
     endDate: "2024-12-20",
     badge: "عطور",
   },
 ];
 
-const offerProducts: Product[] = [
-  {
-    _id: "1",
-    name: "HUDA BEAUTY The New Nude Eyeshadow Palette",
-    slug: "huda-beauty-new-nude-eyeshadow",
-    brand: { _id: "b1", name: "HUDA BEAUTY", slug: "huda-beauty", logo: "", categories: [], isActive: true, order: 1 },
-    category: { _id: "c1", name: "المكياج", slug: "makeup", isActive: true, order: 1 },
-    images: ["https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&q=80"],
-    description: "باليت ظلال عيون نيود",
-    price: 1850,
-    discountPrice: 925,
-    discountPercentage: 50,
-    stock: 50,
-    sku: "HB-001",
-    rating: 4.8,
-    reviewCount: 1250,
-    isActive: true,
-    isFeatured: true,
-    isNewArrival: false,
-    isBestSeller: true,
-    tags: ["مكياج", "ظلال عيون"],
-    specifications: [],
-    createdAt: "2024-01-01",
-  },
-  {
-    _id: "2",
-    name: "The Ordinary Niacinamide 10% + Zinc 1%",
-    slug: "the-ordinary-niacinamide",
-    brand: { _id: "b2", name: "The Ordinary", slug: "the-ordinary", logo: "", categories: [], isActive: true, order: 2 },
-    category: { _id: "c2", name: "العناية بالبشرة", slug: "skincare", isActive: true, order: 2 },
-    images: ["https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&q=80"],
-    description: "سيروم نياسيناميد",
-    price: 275,
-    discountPrice: 193,
-    discountPercentage: 30,
-    stock: 100,
-    sku: "TO-001",
-    rating: 4.9,
-    reviewCount: 3200,
-    isActive: true,
-    isFeatured: true,
-    isNewArrival: false,
-    isBestSeller: true,
-    tags: ["عناية بالبشرة", "سيروم"],
-    specifications: [],
-    createdAt: "2024-01-01",
-  },
-  {
-    _id: "5",
-    name: "Estée Lauder Advanced Night Repair Serum",
-    slug: "estee-lauder-night-repair",
-    brand: { _id: "b5", name: "Estée Lauder", slug: "estee-lauder", logo: "", categories: [], isActive: true, order: 5 },
-    category: { _id: "c2", name: "العناية بالبشرة", slug: "skincare", isActive: true, order: 2 },
-    images: ["https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=400&q=80"],
-    description: "سيروم الليل",
-    price: 1395,
-    discountPrice: 977,
-    discountPercentage: 30,
-    stock: 40,
-    sku: "EL-001",
-    rating: 4.8,
-    reviewCount: 1100,
-    isActive: true,
-    isFeatured: true,
-    isNewArrival: false,
-    isBestSeller: true,
-    tags: ["عناية بالبشرة", "سيروم"],
-    specifications: [],
-    createdAt: "2024-01-01",
-  },
-  {
-    _id: "6",
-    name: "YSL Libre Eau de Parfum",
-    slug: "ysl-libre-edp",
-    brand: { _id: "b6", name: "YSL", slug: "ysl", logo: "", categories: [], isActive: true, order: 6 },
-    category: { _id: "c3", name: "العطور", slug: "perfumes", isActive: true, order: 3 },
-    images: ["https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&q=80"],
-    description: "عطر ليبري",
-    price: 1795,
-    discountPrice: 1257,
-    discountPercentage: 30,
-    stock: 30,
-    sku: "YSL-001",
-    rating: 4.8,
-    reviewCount: 670,
-    isActive: true,
-    isFeatured: true,
-    isNewArrival: false,
-    isBestSeller: true,
-    tags: ["عطور", "عطر نسائي"],
-    specifications: [],
-    createdAt: "2024-01-01",
-  },
-];
-
 export default function OffersPage() {
+  const [offerProducts, setOfferProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/products?isOffer=true")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success) setOfferProducts(data.products);
+      })
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <div className="min-h-screen bg-black pt-32 pb-20">
       <div className="container-luxury">
@@ -183,8 +104,12 @@ export default function OffersPage() {
 
               <div className="absolute bottom-0 right-0 p-6">
                 <p className="text-gold-light text-sm mb-3">{offer.subtitle}</p>
-                <h3 className="text-xl font-bold text-cream mb-4">{offer.title}</h3>
-                <p className="text-sm text-gold-muted mb-4">{offer.description}</p>
+                <h3 className="text-xl font-bold text-cream mb-4">
+                  {offer.title}
+                </h3>
+                <p className="text-sm text-gold-muted mb-4">
+                  {offer.description}
+                </p>
                 <div className="flex items-center gap-2 text-gold text-sm">
                   <Clock size={14} />
                   <span>تنتهي: {offer.endDate}</span>
@@ -194,7 +119,7 @@ export default function OffersPage() {
           ))}
         </div>
 
-        {/* Offer Products */}
+        {/* Offer Products from DB */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold text-cream flex items-center gap-3">
@@ -203,18 +128,28 @@ export default function OffersPage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {offerProducts.map((product, index) => (
-              <motion.div
-                key={product._id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <ProductCard product={product} />
-              </motion.div>
-            ))}
-          </div>
+          {loading ? (
+            <div className="text-center py-12 text-gold-muted">
+              جاري التحميل...
+            </div>
+          ) : offerProducts.length === 0 ? (
+            <div className="text-center py-12 text-gold-muted">
+              لا توجد منتجات على العرض حالياً
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              {offerProducts.map((product, index) => (
+                <motion.div
+                  key={product._id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <ProductCard product={product} />
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Newsletter CTA */}

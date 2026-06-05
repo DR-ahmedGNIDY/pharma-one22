@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Brand from "@/models/Brand";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 export async function GET(
   req: NextRequest,
@@ -44,6 +45,9 @@ export async function PUT(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
+
   try {
     await dbConnect();
 
@@ -109,6 +113,9 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
+
   try {
     await dbConnect();
 

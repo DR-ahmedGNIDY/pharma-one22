@@ -2,11 +2,14 @@
 
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
+import { SecurityProvider } from "@/components/SecurityProvider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
-      {children}
+      <SecurityProvider>
+        {children}
+      </SecurityProvider>
       <Toaster
         position="top-center"
         toastOptions={{

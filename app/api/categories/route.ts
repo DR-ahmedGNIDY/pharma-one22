@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Category from "@/models/Category";
+import { requireAdmin } from "@/lib/requireAdmin";
 
 function slugify(text: string) {
   return text
@@ -35,6 +36,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const authError = await requireAdmin();
+  if (authError) return authError;
+
   try {
     await dbConnect();
 
