@@ -103,7 +103,7 @@ export function Header() {
 >
   <div className="relative w-[280px] h-[70px] lg:w-[220px] lg:h-[50px] overflow-visible flex items-center justify-center">
     <Image
-      src="/images/logo1.png"
+      src="/images/logo1.webp"
       alt="Pharma One Cosmetics"
       width={700}
       height={220}
@@ -120,7 +120,7 @@ export function Header() {
 >
   <div className="relative w-[340px] h-[70px] overflow-visible flex items-center justify-center">
     <Image
-      src="/images/logo1.png"
+      src="/images/logo1.webp"
       alt="Pharma One Cosmetics"
       width={700}
       height={220}
@@ -362,7 +362,7 @@ hover:shadow-[0_0_20px_rgba(212,175,55,0.08)]
                   <div className="flex items-center gap-3">
                     <div className="relative w-10 h-10">
                       <Image
-                        src="/images/logo.png"
+                        src="/images/logo1.webp"
                         alt="Pharma One"
                         fill
                         className="object-contain"
