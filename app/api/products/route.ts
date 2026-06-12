@@ -33,14 +33,7 @@ export async function POST(req: NextRequest) {
       isOffer,
     } = body;
 
-    if (
-      !name ||
-      !brand ||
-      !category ||
-      !description ||
-      !price ||
-      !sku
-    ) {
+    if (!name || !brand || !category || !description || !price || !sku) {
       return NextResponse.json(
         { success: false, message: "جميع الحقول المطلوبة غير مكتملة" },
         { status: 400 }
@@ -87,10 +80,7 @@ export async function POST(req: NextRequest) {
     console.error("CREATE PRODUCT ERROR:", error);
 
     return NextResponse.json(
-      {
-        success: false,
-        message: "حدث خطأ أثناء حفظ المنتج",
-      },
+      { success: false, message: "حدث خطأ أثناء حفظ المنتج" },
       { status: 500 }
     );
   }
@@ -102,9 +92,20 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url);
     const isOffer = searchParams.get("isOffer");
+    const brandSlug = searchParams.get("brandSlug");
 
     const filter: Record<string, unknown> = {};
     if (isOffer === "true") filter.isOffer = true;
+
+    if (brandSlug) {
+      const Brand = (await import("@/models/Brand")).default;
+      const brand = await Brand.findOne({ slug: brandSlug }).select("_id").lean();
+      if (brand) {
+        filter.brand = (brand as any)._id.toString();
+      } else {
+        return NextResponse.json({ success: true, products: [] });
+      }
+    }
 
     const products = await Product.find(filter)
       .sort({ createdAt: -1 })
@@ -119,10 +120,7 @@ export async function GET(req: NextRequest) {
     console.error(error);
 
     return NextResponse.json(
-      {
-        success: false,
-        message: "فشل تحميل المنتجات",
-      },
+      { success: false, message: "فشل تحميل المنتجات" },
       { status: 500 }
     );
   }

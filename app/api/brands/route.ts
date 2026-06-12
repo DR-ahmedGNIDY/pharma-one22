@@ -11,11 +11,17 @@ function slugify(text: string) {
     .replace(/\s+/g, "-");
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     await dbConnect();
 
-    const brands = await Brand.find()
+    const { searchParams } = new URL(req.url);
+    const slug = searchParams.get("slug");
+
+    const filter: Record<string, unknown> = {};
+    if (slug) filter.slug = slug;
+
+    const brands = await Brand.find(filter)
       .populate("categories")
       .sort({ order: 1, createdAt: -1 });
 
