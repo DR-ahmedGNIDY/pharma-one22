@@ -12,7 +12,7 @@ id: 1,
 title: "براندات التجميل العالمية",
 subtitle: "YSL · DIOR · CHANEL",
 description: "اكتشفي أرقي منتجات التجميل من جميع البراندات العالمية",
-image: "/images/banners/panar3.webp",
+image: "/images/banners/panar1.webp",
 cta: {
 primary: "تسوقي الآن",
 secondary: "اكتشفي المزيد",
