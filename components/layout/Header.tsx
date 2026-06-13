@@ -63,7 +63,7 @@ export function Header() {
         <div className="border-b border-gold/10">
           <div className="container-luxury py-2 flex items-center justify-between text-xs">
             <div className="flex items-center gap-6 text-gold-light/70">
-              <span>توصيل سريع لجميع المحافظات</span>
+              <span>توصيل  لجميع المحافظات</span>
               <span className="hidden sm:inline">منتجات أصلية 100%</span>
               <span className="hidden md:inline">دفع آمن</span>
             </div>

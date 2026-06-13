@@ -9,9 +9,9 @@ import { ChevronRight, ChevronLeft } from "lucide-react";
 const slides = [
 {
 id: 1,
-title: "مجموعة العطور الفاخرة",
+title: "براندات التجميل العالمية",
 subtitle: "YSL · DIOR · CHANEL",
-description: "اكتشفي أرقى العطور العالمية بأسعار حصرية",
+description: "اكتشفي أرقي منتجات التجميل من جميع البراندات العالمية",
 image: "/images/banners/panar1.webp",
 cta: {
 primary: "تسوقي الآن",
