@@ -92,8 +92,8 @@ export function Header() {
         </div>
 
         {/* Main Header */}
-        <div className="container-luxury py-4 lg:py-2">
-          <div className="flex flex-row-reverse lg:flex lg:items-center lg:justify-between items-center gap-8 w-full overflow-hidden">
+        <div className="container-luxury pt-6 pb-4 lg:pt-[44px] lg:pb-2">
+          <div className="flex flex-row-reverse lg:flex lg:items-center lg:justify-between items-center gap-8 w-full overflow-x-clip">
            {/* Logo Center */}
 {/* Logo Center */}
 {/* ================= MOBILE LOGO ================= */}
