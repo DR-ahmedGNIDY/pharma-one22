@@ -107,7 +107,7 @@ export function ReviewsSection() {
                     ))}
                   </div>
 
-                  <p className="text-cream/85 text-x1 leading-relaxed mb-4">
+                  <p className="text-cream/85 text-xl leading-relaxed mb-4">
                     "{reviews[currentIndex].text}"
                   </p>
 

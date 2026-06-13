@@ -61,7 +61,7 @@ export function Header() {
 >
         {/* Top Bar */}
         <div className="border-b border-gold/10">
-          <div className="container-luxury py-2 flex items-center justify-between text-xs">
+          <div className="container-luxury py-2 flex items-center justify-between text-sm">
             <div className="flex items-center gap-6 text-gold-light/70">
               <span>توصيل  لجميع المحافظات</span>
               <span className="hidden sm:inline">منتجات أصلية 100%</span>
@@ -370,7 +370,7 @@ hover:shadow-[0_0_20px_rgba(212,175,55,0.08)]
                     </div>
                     <div>
                       <h2 className="text-sm font-bold gold-text">PHARMA ONE</h2>
-                      <p className="text-[8px] text-gold-muted tracking-wider">
+                      <p className="text-xs text-gold-muted tracking-wider">
                         COSMETICS
                       </p>
                     </div>

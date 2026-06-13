@@ -251,7 +251,7 @@ ${window.location.origin}/product/${product.slug}
                 />
               ))}
 
-              <span className="text-x2 text-gold-muted">
+              <span className="text-sm text-gold-muted">
                 ({product.reviewCount})
               </span>
 
