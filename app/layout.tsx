@@ -153,13 +153,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <head>
+      <body className="bg-black text-cream font-arabic min-h-screen overflow-x-hidden">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
         />
-      </head>
-      <body className="bg-black text-cream font-arabic min-h-screen overflow-x-hidden">
         <Providers>{children}</Providers>
       </body>
     </html>
