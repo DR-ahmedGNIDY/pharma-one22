@@ -90,6 +90,12 @@ export const metadata: Metadata = {
   },
 
   category: "shopping",
+
+  icons: {
+    icon: "/icon.webp",
+    shortcut: "/icon.webp",
+    apple: "/icon.webp",
+  },
 };
 
 export const viewport = {
