@@ -101,14 +101,14 @@ export function Header() {
   href="/"
   className="flex lg:hidden items-center justify-start"
 >
-  <div className="relative w-[280px] h-[70px] lg:w-[220px] lg:h-[50px] overflow-visible flex items-center justify-center">
+  <div className="relative w-[310px] h-[70px] overflow-visible flex items-center justify-center">
     <Image
       src="/images/logo1.webp"
       alt="Pharma One Cosmetics"
       width={700}
       height={220}
       priority
-      className="object-contain w-auto h-[150px] lg:h-[120px] max-w-none"
+      className="object-contain w-auto h-[180px] max-w-none"
     />
   </div>
 </Link>
@@ -118,14 +118,14 @@ export function Header() {
   href="/"
   className="hidden lg:flex items-center justify-center"
 >
-  <div className="relative w-[340px] h-[70px] overflow-visible flex items-center justify-center">
+  <div className="relative w-[400px] h-[70px] overflow-visible flex items-center justify-center">
     <Image
       src="/images/logo1.webp"
       alt="Pharma One Cosmetics"
       width={700}
       height={220}
       priority
-      className="object-contain w-auto h-[180px] max-w-none"
+      className="object-contain w-auto h-[215px] max-w-none"
     />
   </div>
 </Link>
