@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -79,7 +79,7 @@ export default function LoginPage() {
                 <div className="text-center mb-8">
                   <div className="relative w-16 h-16 mx-auto mb-4">
                     <Image
-                      src="/images/logo.png"
+                      src="/images/logo1.webp"
                       alt="Pharma One"
                       fill
                       className="object-contain"

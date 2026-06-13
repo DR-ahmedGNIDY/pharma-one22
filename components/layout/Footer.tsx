@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -119,7 +119,7 @@ export function Footer() {
             <Link href="/" className="flex items-center gap-3 mb-6">
               <div className="relative w-14 h-14">
                 <Image
-                  src="/images/logo.png"
+                  src="/images/logo1.webp"
                   alt="Pharma One Cosmetics"
                   fill
                   className="object-contain"

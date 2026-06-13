@@ -129,7 +129,7 @@ ${window.location.origin}/product/${product.slug}
 )}
             <Image
               src={
-                product.images[0] ||
+                product.images?.[0] ||
                 "/images/placeholder.jpg"
               }
               alt={product.name}
@@ -229,7 +229,7 @@ ${window.location.origin}/product/${product.slug}
   <p className="text-lg text-gold-muted mb-4">
     {typeof product.brand === "string"
       ? product.brand
-      : product.brand.name}
+      : product.brand?.name ?? ""}
   </p>
 
 

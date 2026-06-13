@@ -117,7 +117,7 @@ if (!product) {
 
 
   const hasDiscount = product.discountPercentage && product.discountPercentage > 0;
-  const brandName = typeof product.brand === "string" ? product.brand : product.brand.name;
+  const brandName = typeof product.brand === "string" ? product.brand : product.brand?.name ?? "";
 
   const handleAddToCart = () => {
     addItem(product, quantity);
@@ -237,7 +237,7 @@ ${product.name}
           <div className="space-y-6">
             {/* Brand */}
             <Link
-              href={`/brand/${typeof product.brand === "string" ? "" : product.brand.slug}`}
+              href={`/brand/${typeof product.brand === "string" ? "" : product.brand?.slug ?? ""}`}
               className="inline-block text-gold text-sm font-medium hover:text-gold-light transition-colors"
             >
               {brandName}

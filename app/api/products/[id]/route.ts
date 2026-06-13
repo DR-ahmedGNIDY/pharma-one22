@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Types } from "mongoose";
 import dbConnect from "@/lib/db";
 import Product from "@/models/Product";
 import { requireAdmin } from "@/lib/requireAdmin";
@@ -11,6 +12,13 @@ export async function GET(
     await dbConnect();
 
     const { id } = await params;
+
+    if (!Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { success: false, message: "معرّف المنتج غير صحيح" },
+        { status: 400 }
+      );
+    }
 
     const product = await Product.findById(id)
       .populate("brand")
@@ -55,6 +63,13 @@ export async function PUT(
 
     const { id } = await params;
     const body = await req.json();
+
+    if (!Types.ObjectId.isValid(id)) {
+      return NextResponse.json(
+        { success: false, message: "معرّف المنتج غير صحيح" },
+        { status: 400 }
+      );
+    }
 
     const product = await Product.findByIdAndUpdate(
       id,
