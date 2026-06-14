@@ -23,5 +23,17 @@ export default function HomeLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <>
+      {/* Preload LCP hero image — Server Component link is hoisted to <head> by React/Next.js */}
+      <link
+        rel="preload"
+        href="/images/banners/panar5.webp"
+        as="image"
+        type="image/webp"
+        fetchPriority="high"
+      />
+      {children}
+    </>
+  );
 }

@@ -35,6 +35,22 @@
     "zod": "^3.22.4",
     "zustand": "^4.5.0"
   },
+  "browserslist": {
+    "production": [
+      "chrome >= 80",
+      "edge >= 80",
+      "firefox >= 78",
+      "safari >= 14",
+      "ios_saf >= 14",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.10",
     "@types/bcryptjs": "^2.4.6",

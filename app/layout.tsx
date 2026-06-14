@@ -100,8 +100,7 @@ export const metadata: Metadata = {
 
 export const viewport = {
   width: "device-width",
-  initialScale: 0.85,
-  maximumScale: 1,
+  initialScale: 1,
 };
 
 /* ── Organisation + WebSite JSON-LD ─────────────────────────────────────── */
@@ -159,6 +158,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
+      <head>
+        {/* Preconnect to external image hosts to reduce DNS + TLS handshake latency */}
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
+      </head>
       <body className="bg-black text-cream font-arabic min-h-screen overflow-x-hidden">
         <script
           type="application/ld+json"

@@ -75,10 +75,3 @@ h3 {
     0 0 8px rgba(212, 175, 55, 0.15);
 }
 
-/* ===== Mobile ===== */
-
-@media (max-width: 768px) {
-  html {
-    zoom: 0.70;
-  }
-}

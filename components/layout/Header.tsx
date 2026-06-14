@@ -108,6 +108,7 @@ export function Header() {
       width={700}
       height={220}
       priority
+      sizes="310px"
       className="object-contain w-auto h-[180px] max-w-none"
     />
   </div>
@@ -125,6 +126,7 @@ export function Header() {
       width={700}
       height={220}
       priority
+      sizes="400px"
       className="object-contain w-auto h-[215px] max-w-none"
     />
   </div>
@@ -365,6 +367,7 @@ hover:shadow-[0_0_20px_rgba(212,175,55,0.08)]
                         src="/images/logo1.webp"
                         alt="Pharma One"
                         fill
+                        sizes="40px"
                         className="object-contain"
                       />
                     </div>

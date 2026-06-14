@@ -122,6 +122,7 @@ export function Footer() {
                   src="/images/logo1.webp"
                   alt="Pharma One Cosmetics"
                   fill
+                  sizes="56px"
                   className="object-contain"
                 />
               </div>
