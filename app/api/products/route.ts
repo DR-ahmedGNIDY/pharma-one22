@@ -4,17 +4,16 @@ import Product from "@/models/Product";
 import { requireAdmin } from "@/lib/requireAdmin";
 
 function slugify(text: string): string {
-  // Extract Latin characters only — Arabic chars are stripped by \w in JS regex
-  const latin = text
-    .toLowerCase()
+  const result = text
     .trim()
-    .replace(/[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]/g, "") // strip Arabic
-    .replace(/[^\w\s-]/g, "")
-    .replace(/\s+/g, "-")
+    // Keep: Arabic letters/diacritics, Latin letters, digits, spaces, hyphens
+    // Remove: anything else (punctuation, special chars invalid in URLs)
+    .replace(/[^؀-ۿݐ-ݿ\w\s-]/g, "")
+    .toLowerCase()
+    .replace(/[\s-]+/g, "-")  // collapse whitespace and hyphens into single hyphen
     .replace(/^-+|-+$/g, ""); // trim edge hyphens
 
-  // Pure Arabic name — use a stable prefix so the slug is not empty
-  return latin || "product";
+  return result || "product";
 }
 
 async function uniqueSlug(base: string): Promise<string> {
