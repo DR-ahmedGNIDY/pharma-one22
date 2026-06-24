@@ -1,8 +1,9 @@
 ﻿"use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -18,7 +19,17 @@ import {
 import { useSession, signOut } from "next-auth/react";
 import { useCartStore } from "@/hooks/useStore";
 import { useScrollPosition } from "@/hooks/useScroll";
-import { cn, createWhatsAppLink } from "@/lib/utils";
+import { cn, createWhatsAppLink, formatPrice } from "@/lib/utils";
+
+interface SearchResultItem {
+  _id: string;
+  name: string;
+  slug: string;
+  images: string[];
+  price: number;
+  discountPrice?: number;
+  brand?: { name: string; slug: string } | string;
+}
 
 const navLinks = [
   { name: "الرئيسية", href: "/" },
@@ -37,9 +48,78 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [mobileSearchQuery, setMobileSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchResultItem[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [showMobileResults, setShowMobileResults] = useState(false);
   const { data: session } = useSession();
   const cartItems = useCartStore((state) => state.items);
   const totalItems = useCartStore((state) => state.getTotalItems)();
+  const router = useRouter();
+  const searchBoxRef = useRef<HTMLDivElement>(null);
+  const mobileSearchBoxRef = useRef<HTMLDivElement>(null);
+
+  const runSearch = async (query: string, mobile: boolean) => {
+    if (!query.trim()) {
+      setSearchResults([]);
+      if (mobile) setShowMobileResults(false);
+      else setShowResults(false);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const res = await fetch(`/api/products/search?q=${encodeURIComponent(query.trim())}`);
+      const data = await res.json();
+      setSearchResults(data.success ? data.products : []);
+    } catch {
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+      if (mobile) setShowMobileResults(true);
+      else setShowResults(true);
+    }
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => runSearch(searchQuery, false), 350);
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => runSearch(mobileSearchQuery, true), 350);
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mobileSearchQuery]);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (searchBoxRef.current && !searchBoxRef.current.contains(e.target as Node)) {
+        setShowResults(false);
+      }
+      if (mobileSearchBoxRef.current && !mobileSearchBoxRef.current.contains(e.target as Node)) {
+        setShowMobileResults(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleResultClick = (productId: string, mobile: boolean) => {
+    router.push(`/product/${productId}`);
+    if (mobile) {
+      setShowMobileResults(false);
+      setIsSearchOpen(false);
+      setMobileSearchQuery("");
+    } else {
+      setShowResults(false);
+    }
+  };
+
+  const getBrandName = (brand?: { name: string; slug: string } | string) =>
+    typeof brand === "string" ? brand : brand?.name || "";
 
   const whatsappLink = createWhatsAppLink(
     "+201022262971",
@@ -139,18 +219,73 @@ export function Header() {
 
             {/* Search Bar - Desktop */}
 <div className="hidden lg:flex w-[420px]">
-              <div className="relative w-full">
+              <div className="relative w-full" ref={searchBoxRef}>
                 <input
                   type="text"
                   placeholder="ابحث عن منتج، براند، أو كلمة مفتاحية..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => searchQuery.trim() && setShowResults(true)}
                   className="w-full bg-black-light border border-gold/20 rounded-full py-3 px-5 pr-12 text-sm text-cream placeholder:text-gold-muted/50 focus:outline-none focus:border-gold/50 focus:shadow-gold-sm transition-all"
                 />
                 <Search
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gold-muted"
                   size={18}
                 />
+
+                <AnimatePresence>
+                  {showResults && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute top-full mt-2 right-0 left-0 bg-black-light border border-gold/20 rounded-2xl shadow-2xl max-h-[420px] overflow-y-auto z-50"
+                    >
+                      {isSearching ? (
+                        <div className="p-4 text-sm text-gold-muted text-center">
+                          جاري البحث...
+                        </div>
+                      ) : searchResults.length === 0 ? (
+                        <div className="p-4 text-sm text-gold-muted text-center">
+                          لا توجد نتائج مطابقة لـ &quot;{searchQuery}&quot;
+                        </div>
+                      ) : (
+                        <ul className="divide-y divide-gold/10">
+                          {searchResults.map((product) => (
+                            <li key={product._id}>
+                              <button
+                                type="button"
+                                onClick={() => handleResultClick(product._id, false)}
+                                className="w-full flex items-center gap-3 p-3 hover:bg-gold/5 transition-colors text-right"
+                              >
+                                <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-black flex-shrink-0">
+                                  {product.images?.[0] && (
+                                    <Image
+                                      src={product.images[0]}
+                                      alt={product.name}
+                                      fill
+                                      sizes="48px"
+                                      className="object-cover"
+                                    />
+                                  )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm text-cream truncate">{product.name}</p>
+                                  <p className="text-xs text-gold-muted truncate">
+                                    {getBrandName(product.brand)}
+                                  </p>
+                                </div>
+                                <span className="text-sm font-bold text-gold whitespace-nowrap">
+                                  {formatPrice(product.discountPrice || product.price)}
+                                </span>
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
 
@@ -324,17 +459,73 @@ hover:shadow-[0_0_20px_rgba(212,175,55,0.08)]
               exit={{ opacity: 0, y: -20 }}
               className="lg:hidden absolute top-full right-0 left-0 bg-black-light border-b border-gold/20 p-4"
             >
-              <div className="relative">
+              <div className="relative" ref={mobileSearchBoxRef}>
                 <input
                   type="text"
                   placeholder="ابحث عن منتج..."
                   autoFocus
+                  value={mobileSearchQuery}
+                  onChange={(e) => setMobileSearchQuery(e.target.value)}
                   className="w-full bg-[#111] border border-gold/20 rounded-full py-4 px-6 pr-14 text-base text-cream placeholder:text-gold-muted/50 focus:outline-none focus:border-gold/50 focus:shadow-2xl transition-all"
                 />
                 <Search
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gold-muted"
                   size={18}
                 />
+
+                <AnimatePresence>
+                  {showMobileResults && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="absolute top-full mt-2 right-0 left-0 bg-[#111] border border-gold/20 rounded-2xl shadow-2xl max-h-[400px] overflow-y-auto z-50"
+                    >
+                      {isSearching ? (
+                        <div className="p-4 text-sm text-gold-muted text-center">
+                          جاري البحث...
+                        </div>
+                      ) : searchResults.length === 0 ? (
+                        <div className="p-4 text-sm text-gold-muted text-center">
+                          لا توجد نتائج مطابقة لـ &quot;{mobileSearchQuery}&quot;
+                        </div>
+                      ) : (
+                        <ul className="divide-y divide-gold/10">
+                          {searchResults.map((product) => (
+                            <li key={product._id}>
+                              <button
+                                type="button"
+                                onClick={() => handleResultClick(product._id, true)}
+                                className="w-full flex items-center gap-3 p-3 hover:bg-gold/5 transition-colors text-right"
+                              >
+                                <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-black flex-shrink-0">
+                                  {product.images?.[0] && (
+                                    <Image
+                                      src={product.images[0]}
+                                      alt={product.name}
+                                      fill
+                                      sizes="48px"
+                                      className="object-cover"
+                                    />
+                                  )}
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm text-cream truncate">{product.name}</p>
+                                  <p className="text-xs text-gold-muted truncate">
+                                    {getBrandName(product.brand)}
+                                  </p>
+                                </div>
+                                <span className="text-sm font-bold text-gold whitespace-nowrap">
+                                  {formatPrice(product.discountPrice || product.price)}
+                                </span>
+                              </button>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </motion.div>
           )}
