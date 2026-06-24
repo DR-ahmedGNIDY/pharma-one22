@@ -44,7 +44,7 @@ const footerLinks = {
 
 const features = [
   { icon: Gift, title: "منتجات أصلية 100%", desc: "جودة مضمونة" },
-  { icon: Truck, title: "توصيل سريع", desc: "إلى جميع مناطق المملكة" },
+  { icon: Truck, title: "توصيل ", desc: "لجميع محاظات مصر" },
   { icon: Shield, title: "دفع آمن", desc: "خيارات دفع متعددة" },
   { icon: Headphones, title: "دعم عملاء", desc: "متاح 24/7" },
 ];
