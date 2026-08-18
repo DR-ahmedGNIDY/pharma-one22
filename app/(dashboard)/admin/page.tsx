@@ -1,64 +1,49 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  ShoppingBag,
-  Users,
-  DollarSign,
-  TrendingUp,
-  Package,
-  Star,
-  ArrowUpRight,
-  ArrowDownRight,
-} from "lucide-react";
+import { ShoppingBag, Users, DollarSign, Package } from "lucide-react";
 
-const stats = [
-  {
-    title: "إجمالي المبيعات",
-    value: "125,430 ج.م",
-    change: "+12.5%",
-    isPositive: true,
-    icon: DollarSign,
-  },
-  {
-    title: "الطلبات",
-    value: "1,234",
-    change: "+8.2%",
-    isPositive: true,
-    icon: ShoppingBag,
-  },
-  {
-    title: "العملاء",
-    value: "3,456",
-    change: "+15.3%",
-    isPositive: true,
-    icon: Users,
-  },
-  {
-    title: "المنتجات",
-    value: "7,890",
-    change: "+5.1%",
-    isPositive: true,
-    icon: Package,
-  },
-];
-
-const recentOrders = [
-  { id: "PO-123456", customer: "سارة أحمد", total: 1850, status: "delivered", date: "2024-12-20" },
-  { id: "PO-123457", customer: "نور محمد", total: 2750, status: "processing", date: "2024-12-20" },
-  { id: "PO-123458", customer: "فاطمة علي", total: 950, status: "pending", date: "2024-12-19" },
-  { id: "PO-123459", customer: "مريم خالد", total: 3200, status: "shipped", date: "2024-12-19" },
-  { id: "PO-123460", customer: "أحمد سامي", total: 1450, status: "delivered", date: "2024-12-18" },
-];
-
-const topProducts = [
-  { name: "The Ordinary Niacinamide", sales: 456, revenue: 125400 },
-  { name: "HUDA BEAUTY Eyeshadow", sales: 234, revenue: 432900 },
-  { name: "MAC Matte Lipstick", sales: 189, revenue: 93555 },
-  { name: "CeraVe Moisturizing Cream", sales: 167, revenue: 53440 },
-];
+type RecentOrder = { id: string; customer: string; total: number; status: string; date: string };
+type TopProduct = { name: string; sales: number; revenue: number };
 
 export default function AdminDashboard() {
+  const [productsCount, setProductsCount] = useState<number | null>(null);
+  const recentOrders: RecentOrder[] = [];
+  const topProducts: TopProduct[] = [];
+
+  useEffect(() => {
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.success) setProductsCount(data.products.length);
+      })
+      .catch(() => setProductsCount(0));
+  }, []);
+
+  const stats = [
+    {
+      title: "إجمالي المبيعات",
+      value: "0 ج.م",
+      icon: DollarSign,
+    },
+    {
+      title: "الطلبات",
+      value: "0",
+      icon: ShoppingBag,
+    },
+    {
+      title: "العملاء",
+      value: "0",
+      icon: Users,
+    },
+    {
+      title: "المنتجات",
+      value: productsCount === null ? "..." : productsCount.toLocaleString("ar-EG"),
+      icon: Package,
+    },
+  ];
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -81,12 +66,6 @@ export default function AdminDashboard() {
               <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center">
                 <stat.icon className="text-gold" size={24} />
               </div>
-              <div className={`flex items-center gap-1 text-sm ${
-                stat.isPositive ? "text-green-400" : "text-red-400"
-              }`}>
-                {stat.isPositive ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
-                <span>{stat.change}</span>
-              </div>
             </div>
             <h3 className="text-gold-muted text-sm mb-3">{stat.title}</h3>
             <p className="text-2xl font-bold text-cream">{stat.value}</p>
@@ -105,6 +84,9 @@ export default function AdminDashboard() {
             </button>
           </div>
           <div className="space-y-3">
+            {recentOrders.length === 0 && (
+              <p className="text-gold-muted text-sm text-center py-6">لا توجد طلبات بعد</p>
+            )}
             {recentOrders.map((order) => (
               <div
                 key={order.id}
@@ -145,6 +127,9 @@ export default function AdminDashboard() {
             </button>
           </div>
           <div className="space-y-4">
+            {topProducts.length === 0 && (
+              <p className="text-gold-muted text-sm text-center py-6">لا توجد بيانات مبيعات بعد</p>
+            )}
             {topProducts.map((product, index) => (
               <div key={product.name} className="flex items-center gap-4">
                 <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold font-bold text-sm">
