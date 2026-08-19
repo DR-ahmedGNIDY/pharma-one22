@@ -2,8 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, Search, Edit2, Trash2, Image as ImageIcon } from "lucide-react";
+import {
+  Plus,
+  Search,
+  Edit2,
+  Trash2,
+  Image as ImageIcon,
+  ChevronRight,
+  ChevronLeft,
+} from "lucide-react";
 import toast from "react-hot-toast";
+
+const PAGE_SIZE = 15;
 
 interface ProductForm {
   name: string;
@@ -32,34 +42,75 @@ const defaultForm: ProductForm = {
 export default function AdminProducts() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const [brands, setBrands] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
   const [formData, setFormData] = useState<ProductForm>(defaultForm);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    loadData();
+    loadStaticData();
   }, []);
 
-  const loadData = async () => {
+  // Debounce the search box so it doesn't refetch on every keystroke
+  useEffect(() => {
+    const timeout = setTimeout(() => setDebouncedSearch(searchQuery), 300);
+    return () => clearTimeout(timeout);
+  }, [searchQuery]);
+
+  // A new search term always restarts from page 1
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
+
+  useEffect(() => {
+    loadProducts(page, debouncedSearch);
+  }, [page, debouncedSearch]);
+
+  const loadStaticData = async () => {
     try {
-      const [brandsRes, categoriesRes, productsRes] = await Promise.all([
+      const [brandsRes, categoriesRes] = await Promise.all([
         fetch("/api/brands"),
         fetch("/api/categories"),
-        fetch("/api/products"),
       ]);
 
       const brandsData = await brandsRes.json();
       const categoriesData = await categoriesRes.json();
-      const productsData = await productsRes.json();
 
-      if (productsData.success) setProducts(productsData.products);
       if (brandsData.success) setBrands(brandsData.brands);
       if (categoriesData.success) setCategories(categoriesData.categories);
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const loadProducts = async (pageToLoad: number, search: string) => {
+    setIsLoading(true);
+    try {
+      const params = new URLSearchParams({
+        page: String(pageToLoad),
+        limit: String(PAGE_SIZE),
+      });
+      if (search) params.set("search", search);
+
+      const res = await fetch(`/api/products?${params.toString()}`);
+      const data = await res.json();
+
+      if (data.success) {
+        setProducts(data.products);
+        setTotalPages(data.totalPages || 1);
+        setTotalCount(data.totalCount || 0);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -136,7 +187,8 @@ export default function AdminProducts() {
       );
 
       closeModal();
-      loadData();
+      loadProducts(isEditing ? page : 1, debouncedSearch);
+      if (!isEditing) setPage(1);
     } catch (error) {
       console.error(error);
       toast.error("حدث خطأ أثناء حفظ المنتج");
@@ -156,16 +208,17 @@ export default function AdminProducts() {
       }
 
       toast.success("تم حذف المنتج بنجاح");
-      setProducts((prev) => prev.filter((product) => product._id !== id));
+      // Re-fetch so pagination totals stay correct; step back a page if this was the last item on it
+      if (products.length === 1 && page > 1) {
+        setPage(page - 1);
+      } else {
+        loadProducts(page, debouncedSearch);
+      }
     } catch (error) {
       console.error(error);
       toast.error("حدث خطأ أثناء الحذف");
     }
   };
-
-  const filteredProducts = products.filter((product) =>
-    product.name?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <div className="space-y-8">
@@ -245,14 +298,14 @@ export default function AdminProducts() {
             </tr>
           </thead>
           <tbody>
-            {filteredProducts.length === 0 && (
+            {!isLoading && products.length === 0 && (
               <tr>
                 <td colSpan={6} className="py-10 text-center text-gold-muted">
                   لا توجد منتجات
                 </td>
               </tr>
             )}
-            {filteredProducts.map((product: any, index: number) => (
+            {products.map((product: any, index: number) => (
               <motion.tr
                 key={product._id}
                 initial={{ opacity: 0 }}
@@ -338,6 +391,52 @@ export default function AdminProducts() {
           </tbody>
         </table>
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-gold-muted">
+            {totalCount} منتج — صفحة {page} من {totalPages}
+          </p>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="p-2 rounded-lg border border-gold/20 text-gold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gold/10 transition-colors"
+            >
+              <ChevronRight size={18} />
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter(
+                (n) => n === 1 || n === totalPages || Math.abs(n - page) <= 1
+              )
+              .map((n, i, arr) => (
+                <span key={n} className="flex items-center gap-2">
+                  {i > 0 && arr[i - 1] !== n - 1 && (
+                    <span className="text-gold-muted">…</span>
+                  )}
+                  <button
+                    onClick={() => setPage(n)}
+                    className={`w-9 h-9 rounded-lg text-sm transition-colors ${
+                      n === page
+                        ? "bg-gold text-black font-bold"
+                        : "border border-gold/20 text-gold hover:bg-gold/10"
+                    }`}
+                  >
+                    {n}
+                  </button>
+                </span>
+              ))}
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="p-2 rounded-lg border border-gold/20 text-gold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gold/10 transition-colors"
+            >
+              <ChevronLeft size={18} />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Add / Edit Product Modal */}
       {isModalOpen && (

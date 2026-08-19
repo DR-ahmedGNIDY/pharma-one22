@@ -16,6 +16,8 @@ const catMap: Record<string, string> = {
   tools: "الأدوات والإكسسوارات",
 };
 
+const PAGE_SIZE = 12;
+
 function ShopContent() {
   const searchParams = useSearchParams();
  const [products, setProducts] = useState<Product[]>([]);
@@ -34,9 +36,16 @@ function ShopContent() {
     sortBy: "newest",
   });
 
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
   useEffect(() => {
     loadProducts();
   }, []);
+
+  // Show the first page again whenever filters/sort change the result set
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [filters]);
 
   const loadProducts = async () => {
     try {
@@ -156,6 +165,9 @@ const sortedProducts = [...filteredProducts].sort((a: any, b: any) => {
       );
   }
 });
+
+  const visibleProducts = sortedProducts.slice(0, visibleCount);
+  const hasMore = visibleCount < sortedProducts.length;
 
   const toggleFilter = (type: "brands" | "categories", value: string) => {
     setFilters((prev) => {
@@ -404,22 +416,35 @@ const sortedProducts = [...filteredProducts].sort((a: any, b: any) => {
                 <p className="text-gold-muted text-lg">لا توجد منتجات مطابقة للفلاتر المحددة</p>
               </div>
             ) : (
-              <div className={`grid gap-5 ${
-                viewMode === "grid"
-                  ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-                  : "grid-cols-1"
-              }`}>
-                {sortedProducts.map((product, index) => (
-                  <motion.div
-                    key={product._id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                  >
-                    <ProductCard product={product} />
-                  </motion.div>
-                ))}
-              </div>
+              <>
+                <div className={`grid gap-5 ${
+                  viewMode === "grid"
+                    ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                    : "grid-cols-1"
+                }`}>
+                  {visibleProducts.map((product, index) => (
+                    <motion.div
+                      key={product._id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: (index % PAGE_SIZE) * 0.05 }}
+                    >
+                      <ProductCard product={product} />
+                    </motion.div>
+                  ))}
+                </div>
+
+                {hasMore && (
+                  <div className="flex justify-center mt-10">
+                    <button
+                      onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                      className="px-8 py-3 rounded-xl border border-gold/30 text-gold hover:bg-gold/10 transition-colors text-sm font-medium"
+                    >
+                      عرض المزيد ({sortedProducts.length - visibleCount} متبقي)
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

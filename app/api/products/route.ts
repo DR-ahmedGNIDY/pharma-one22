@@ -108,9 +108,15 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const isOffer = searchParams.get("isOffer");
     const brandSlug = searchParams.get("brandSlug");
+    const category = searchParams.get("category");
+    const search = searchParams.get("search");
+    const pageParam = searchParams.get("page");
+    const limitParam = searchParams.get("limit");
 
     const filter: Record<string, unknown> = {};
     if (isOffer === "true") filter.isOffer = true;
+    if (category) filter.category = category;
+    if (search) filter.name = { $regex: search, $options: "i" };
 
     if (brandSlug) {
       const Brand = (await import("@/models/Brand")).default;
@@ -122,14 +128,39 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    const products = await Product.find(filter)
-      .sort({ createdAt: -1 })
-      .populate("brand")
-      .populate("category");
+    // Backward-compatible: without ?page, return every matching product as before.
+    // Callers migrated to pagination should pass ?page=1&limit=20.
+    if (!pageParam) {
+      const products = await Product.find(filter)
+        .sort({ createdAt: -1 })
+        .populate("brand")
+        .populate("category");
+
+      return NextResponse.json({
+        success: true,
+        products,
+      });
+    }
+
+    const page = Math.max(1, parseInt(pageParam, 10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(limitParam || "20", 10) || 20));
+
+    const [products, totalCount] = await Promise.all([
+      Product.find(filter)
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .populate("brand")
+        .populate("category"),
+      Product.countDocuments(filter),
+    ]);
 
     return NextResponse.json({
       success: true,
       products,
+      totalCount,
+      totalPages: Math.max(1, Math.ceil(totalCount / limit)),
+      currentPage: page,
     });
   } catch (error) {
     console.error(error);
