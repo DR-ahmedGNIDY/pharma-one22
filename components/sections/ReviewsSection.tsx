@@ -53,7 +53,8 @@ export function ReviewsSection() {
 
   return (
     <section className="py-10 bg-[#0a0a0a]">
-      <div className="container-luxury max-w-4xl">
+      <div className="container-luxury">
+      <div className="max-w-4xl mx-auto">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -155,6 +156,7 @@ export function ReviewsSection() {
             </button>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );

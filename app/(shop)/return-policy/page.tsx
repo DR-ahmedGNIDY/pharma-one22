@@ -27,7 +27,8 @@ export default function ReturnPolicyPage() {
 
   return (
     <div className="min-h-screen bg-black pt-32 pb-20">
-      <div className="container-luxury max-w-4xl">
+      <div className="container-luxury">
+      <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -86,6 +87,7 @@ export default function ReturnPolicyPage() {
             </Link>
           </div>
         </motion.div>
+      </div>
       </div>
     </div>
   );

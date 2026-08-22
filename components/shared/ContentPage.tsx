@@ -32,7 +32,8 @@ export function ContentPage({ slug, icon: Icon, tagline, fallbackTitle }: Conten
 
   return (
     <div className="min-h-screen bg-black pt-32 pb-20">
-      <div className="container-luxury max-w-3xl">
+      <div className="container-luxury">
+      <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -59,6 +60,7 @@ export function ContentPage({ slug, icon: Icon, tagline, fallbackTitle }: Conten
             <MarkdownContent content={content} />
           )}
         </motion.div>
+      </div>
       </div>
     </div>
   );

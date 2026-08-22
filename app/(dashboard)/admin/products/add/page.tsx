@@ -327,7 +327,8 @@ if (file.size > maxSize) {
 
   return (
     <div className="min-h-screen bg-black pt-24 pb-20">
-      <div className="container-luxury max-w-5xl">
+      <div className="container-luxury">
+      <div className="max-w-5xl mx-auto">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -969,6 +970,7 @@ if (file.size > maxSize) {
             )}
           </div>
         </motion.div>
+      </div>
       </div>
     </div>
   );
