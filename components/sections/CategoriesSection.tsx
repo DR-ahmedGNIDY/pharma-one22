@@ -91,6 +91,7 @@ export function CategoriesSection() {
                   src={category.image}
                   alt={category.name}
                   fill
+                  sizes="(max-width: 768px) 45vw, (max-width: 1024px) 30vw, 15vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />

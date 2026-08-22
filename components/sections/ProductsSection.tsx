@@ -52,12 +52,14 @@ export function ProductsSection({
             <div className="flex items-center gap-1">
               <button
                 onClick={() => scroll("right")}
+                aria-label="التمرير لليمين"
                 className="w-7 h-7 rounded-full border border-gold/15 flex items-center justify-center text-gold/60 hover:border-gold/40 hover:text-gold transition-all"
               >
                 <ChevronRight size={14} />
               </button>
               <button
                 onClick={() => scroll("left")}
+                aria-label="التمرير لليسار"
                 className="w-7 h-7 rounded-full border border-gold/15 flex items-center justify-center text-gold/60 hover:border-gold/40 hover:text-gold transition-all"
               >
                 <ChevronLeft size={14} />
@@ -76,9 +78,16 @@ export function ProductsSection({
         {/* Products Slider */}
         <div
           ref={scrollRef}
-          className="flex gap-3 overflow-x-auto pb-2"
+          className="flex gap-3 overflow-x-auto pb-2 min-h-[430px]"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
+          {products.length === 0 &&
+            Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="shrink-0 w-[240px] aspect-[240/430] rounded-2xl bg-white/5 animate-pulse"
+              />
+            ))}
           {products.map((product, index) => (
             <motion.div
               key={product._id}

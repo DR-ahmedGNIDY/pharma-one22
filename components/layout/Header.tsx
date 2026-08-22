@@ -298,6 +298,7 @@ export function Header() {
     {/* Mobile Menu */}
     <button
       onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      aria-label={isMobileMenuOpen ? "إغلاق القائمة" : "فتح القائمة"}
       className="p-2 text-gold-light hover:text-gold transition-colors"
     >
       {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -306,6 +307,7 @@ export function Header() {
     {/* Cart Mobile */}
     <Link
       href="/cart"
+      aria-label="سلة التسوق"
       className="flex p-2 text-gold-light hover:text-gold transition-colors relative"
     >
       <ShoppingBag size={26} />
@@ -335,6 +337,7 @@ export function Header() {
     {/* Search Mobile */}
     <button
       onClick={() => setIsSearchOpen(!isSearchOpen)}
+      aria-label="بحث"
       className="p-2 mr-4 text-gold-light hover:text-gold transition-colors"
     >
       <Search size={21} />
@@ -359,6 +362,7 @@ export function Header() {
     {/* Wishlist */}
     <Link
       href="/wishlist"
+      aria-label="المفضلة"
       className="flex p-2 text-gold-light hover:text-gold transition-colors relative"
     >
       <Heart size={22} />
@@ -371,6 +375,7 @@ export function Header() {
     {/* Cart */}
     <Link
       href="/cart"
+      aria-label="سلة التسوق"
       className="flex p-2 text-gold-light hover:text-gold transition-colors relative"
     >
       <ShoppingBag size={22} />
@@ -389,6 +394,7 @@ export function Header() {
     {/* Account */}
     <Link
       href={session ? "/account" : "/login"}
+      aria-label="الحساب"
       className="flex p-2 text-gold-light hover:text-gold transition-colors"
     >
       <User size={22} />
@@ -571,6 +577,7 @@ hover:shadow-[0_0_20px_rgba(212,175,55,0.08)]
                   </div>
                   <button
                     onClick={() => setIsMobileMenuOpen(false)}
+                    aria-label="إغلاق القائمة"
                     className="p-2 text-gold-light hover:text-gold"
                   >
                     <X size={24} />

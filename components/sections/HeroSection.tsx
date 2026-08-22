@@ -133,6 +133,7 @@ export function HeroSection() {
         onClick={() =>
           setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
         }
+        aria-label="الشريحة السابقة"
         className="absolute left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/40 border border-gold/20 flex items-center justify-center text-gold"
       >
         <ChevronLeft size={20} />
@@ -142,6 +143,7 @@ export function HeroSection() {
         onClick={() =>
           setCurrentSlide((prev) => (prev + 1) % slides.length)
         }
+        aria-label="الشريحة التالية"
         className="absolute right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/40 border border-gold/20 flex items-center justify-center text-gold"
       >
         <ChevronRight size={20} />
