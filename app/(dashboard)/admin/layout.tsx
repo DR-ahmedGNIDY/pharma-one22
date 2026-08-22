@@ -9,6 +9,7 @@ import {
   Image as ImageIcon,
   Settings,
   BarChart3,
+  LineChart,
   LogOut,
 } from "lucide-react";
 
@@ -20,6 +21,7 @@ const adminLinks = [
   { name: "الطلبات", href: "/admin/orders", icon: BarChart3 },
   { name: "العملاء", href: "/admin/users", icon: Users },
   { name: "البنرات", href: "/admin/banners", icon: ImageIcon },
+  { name: "التحليلات", href: "/admin/analytics", icon: LineChart },
   { name: "الإعدادات", href: "/admin/settings", icon: Settings },
 ];
 

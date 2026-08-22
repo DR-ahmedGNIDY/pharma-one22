@@ -1,5 +1,6 @@
 ﻿"use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -20,27 +21,46 @@ import {
 } from "lucide-react";
 import { createWhatsAppLink } from "@/lib/utils";
 
-const footerLinks = {
-  "معلومات": [
-    { name: "من نحن", href: "/about" },
-    { name: "سياسة الخصوصية", href: "/privacy" },
-    { name: "الشروط والأحكام", href: "/terms" },
-    { name: "سياسة الاسترجاع", href: "/return-policy" },
-    { name: "الأسئلة الشائعة", href: "/faq" },
-  ],
-  "خدمة العملاء": [
-    { name: "تتبع الطلب", href: "/account/orders" },
-    { name: "طرق الدفع", href: "/payment-methods" },
-    { name: "الشحن والتوصيل", href: "/shipping" },
-    { name: "الاسترجاع والاستبدال", href: "/return-policy" },
-    { name: "تواصل معنا", href: "/contact" },
-  ],
-  "تواصل معنا": [
-    { name: "+20 102 226 2971", href: "tel:+201022262971", icon: Phone },
-    { name: "support@pharmaone.com", href: "mailto:support@pharmaone.com", icon: Mail },
-    { name: "سوهاج - شارع الجمهورية", href: "#", icon: MapPin },
-  ],
+interface SiteSettings {
+  contactEmail: string;
+  contactPhone: string;
+  whatsappNumber: string;
+  whatsappMessage: string;
+  address: string;
+  socialLinks: {
+    facebook?: string;
+    instagram?: string;
+    tiktok?: string;
+    snapchat?: string;
+    twitter?: string;
+    youtube?: string;
+  };
+}
+
+const defaultSettings: SiteSettings = {
+  contactEmail: "support@pharmaone.com",
+  contactPhone: "+20 102 226 2971",
+  whatsappNumber: "+201022262971",
+  whatsappMessage: "مرحبًا، أريد الاستفسار عن منتجات Pharma One Cosmetics",
+  address: "سوهاج - شارع الجمهورية - ش ضيف الله - برج الحاج عبداللطيف",
+  socialLinks: {},
 };
+
+const infoLinks = [
+  { name: "من نحن", href: "/about" },
+  { name: "سياسة الخصوصية", href: "/privacy" },
+  { name: "الشروط والأحكام", href: "/terms" },
+  { name: "سياسة الاسترجاع", href: "/return-policy" },
+  { name: "الأسئلة الشائعة", href: "/faq" },
+];
+
+const supportLinks = [
+  { name: "تتبع الطلب", href: "/account/orders" },
+  { name: "طرق الدفع", href: "/payment-methods" },
+  { name: "الشحن والتوصيل", href: "/shipping" },
+  { name: "الاسترجاع والاستبدال", href: "/return-policy" },
+  { name: "تواصل معنا", href: "/contact" },
+];
 
 const features = [
   { icon: Gift, title: "منتجات أصلية 100%", desc: "جودة مضمونة" },
@@ -50,10 +70,43 @@ const features = [
 ];
 
 export function Footer() {
+  const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.settings) {
+          setSettings({
+            contactEmail: data.settings.contactEmail || defaultSettings.contactEmail,
+            contactPhone: data.settings.contactPhone || defaultSettings.contactPhone,
+            whatsappNumber: data.settings.whatsappNumber || defaultSettings.whatsappNumber,
+            whatsappMessage: data.settings.whatsappMessage || defaultSettings.whatsappMessage,
+            address: data.settings.address || defaultSettings.address,
+            socialLinks: data.settings.socialLinks || {},
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const whatsappLink = createWhatsAppLink(
-    "+201022262971",
-    "مرحبًا، أريد الاستفسار عن منتجات Pharma One Cosmetics"
+    settings.whatsappNumber,
+    settings.whatsappMessage
   );
+
+  const contactLinks = [
+    { name: settings.contactPhone, href: `tel:${settings.contactPhone.replace(/\s+/g, "")}`, icon: Phone },
+    { name: settings.contactEmail, href: `mailto:${settings.contactEmail}`, icon: Mail },
+    { name: settings.address, href: "#", icon: MapPin },
+  ];
+
+  const socialIcons = [
+    { icon: Facebook, href: settings.socialLinks.facebook },
+    { icon: Instagram, href: settings.socialLinks.instagram },
+    { icon: Twitter, href: settings.socialLinks.twitter },
+    { icon: Youtube, href: settings.socialLinks.youtube },
+  ].filter((s) => s.href);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -137,36 +190,29 @@ export function Footer() {
               وجهتك الأولى لأفضل منتجات التجميل العالمية. أكثر من 7000 منتج من
               أكثر من 100 براند عالمي موثوق.
             </p>
-            <div className="flex items-center gap-3">
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold hover:bg-gold hover:text-black transition-all"
-              >
-                <Facebook size={18} />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold hover:bg-gold hover:text-black transition-all"
-              >
-                <Instagram size={18} />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold hover:bg-gold hover:text-black transition-all"
-              >
-                <Twitter size={18} />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold hover:bg-gold hover:text-black transition-all"
-              >
-                <Youtube size={18} />
-              </a>
-            </div>
+            {socialIcons.length > 0 && (
+              <div className="flex items-center gap-3">
+                {socialIcons.map((social, index) => (
+                  <a
+                    key={index}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold hover:bg-gold hover:text-black transition-all"
+                  >
+                    <social.icon size={18} />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Links */}
-          {Object.entries(footerLinks).map(([title, links]) => (
+          {Object.entries({
+            "معلومات": infoLinks,
+            "خدمة العملاء": supportLinks,
+            "تواصل معنا": contactLinks,
+          }).map(([title, links]) => (
             <div key={title}>
               <h4 className="text-gold font-bold mb-4 text-sm">{title}</h4>
               <ul className="space-y-3">

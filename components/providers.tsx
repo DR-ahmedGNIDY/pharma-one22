@@ -3,6 +3,7 @@
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
 import { SecurityProvider } from "@/components/SecurityProvider";
+import { AnalyticsTracker } from "@/components/analytics/AnalyticsTracker";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -10,6 +11,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <SecurityProvider>
         {children}
       </SecurityProvider>
+      <AnalyticsTracker />
       <Toaster
         position="top-center"
         toastOptions={{

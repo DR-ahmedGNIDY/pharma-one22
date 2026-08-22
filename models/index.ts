@@ -7,3 +7,5 @@ export { default as Cart } from "./Cart";
 export { default as Review } from "./Review";
 export { default as Banner } from "./Banner";
 export { default as Settings } from "./Settings";
+export { default as Page } from "./Page";
+export { default as PageView } from "./PageView";
