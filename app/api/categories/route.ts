@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Category from "@/models/Category";
+import Product from "@/models/Product";
 import { requireAdmin } from "@/lib/requireAdmin";
 
 function slugify(text: string) {
@@ -18,9 +19,22 @@ export async function GET() {
     const categories = await Category.find()
       .sort({ order: 1, createdAt: -1 });
 
+    const counts = await Product.aggregate([
+      { $match: { isActive: true } },
+      { $group: { _id: "$category", count: { $sum: 1 } } },
+    ]);
+    const countByCategoryId = new Map(
+      counts.map((c) => [c._id.toString(), c.count])
+    );
+
+    const categoriesWithCounts = categories.map((cat) => ({
+      ...cat.toObject(),
+      productCount: countByCategoryId.get(cat._id.toString()) || 0,
+    }));
+
     return NextResponse.json({
       success: true,
-      categories,
+      categories: categoriesWithCounts,
     });
   } catch (error) {
     console.error(error);
