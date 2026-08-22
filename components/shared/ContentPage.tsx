@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { LucideIcon } from "lucide-react";
+import { MarkdownContent } from "@/components/shared/MarkdownContent";
 
 interface ContentPageProps {
   slug: string;
@@ -55,14 +56,7 @@ export function ContentPage({ slug, icon: Icon, tagline, fallbackTitle }: Conten
           {loading ? (
             <p className="text-gold-muted">جاري التحميل...</p>
           ) : (
-            content.split("\n\n").map((paragraph, index) => (
-              <p
-                key={index}
-                className="text-gold-muted leading-relaxed whitespace-pre-line mb-4 last:mb-0"
-              >
-                {paragraph}
-              </p>
-            ))
+            <MarkdownContent content={content} />
           )}
         </motion.div>
       </div>

@@ -12,8 +12,11 @@ import {
   Plus,
   Trash2,
   Save,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { MarkdownContent } from "@/components/shared/MarkdownContent";
 
 interface SocialLinks {
   facebook: string;
@@ -71,6 +74,7 @@ export default function AdminSettingsPage() {
   const [pageForm, setPageForm] = useState<PageForm | null>(null);
   const [pageLoading, setPageLoading] = useState(false);
   const [pageSaving, setPageSaving] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
     loadSettings();
@@ -605,13 +609,36 @@ export default function AdminSettingsPage() {
                 </div>
               ) : (
                 <div>
-                  <label className="block text-sm text-gold-light mb-2">محتوى الصفحة</label>
-                  <textarea
-                    rows={14}
-                    value={pageForm.content}
-                    onChange={(e) => setPageForm({ ...pageForm, content: e.target.value })}
-                    className="w-full bg-black border border-gold/20 rounded-xl py-3 px-4 text-cream leading-relaxed"
-                  />
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm text-gold-light">محتوى الصفحة</label>
+                    <button
+                      type="button"
+                      onClick={() => setShowPreview(!showPreview)}
+                      className="flex items-center gap-1.5 text-xs text-gold hover:opacity-80"
+                    >
+                      {showPreview ? <EyeOff size={14} /> : <Eye size={14} />}
+                      {showPreview ? "إخفاء المعاينة" : "معاينة"}
+                    </button>
+                  </div>
+
+                  <p className="text-xs text-gold-muted mb-3 leading-relaxed">
+                    بتدعم تنسيق بسيط: <code className="text-gold">## عنوان</code> لعنوان فرعي،{" "}
+                    <code className="text-gold">- نص</code> لنقطة، و{" "}
+                    <code className="text-gold">**نص**</code> لنص عريض.
+                  </p>
+
+                  {showPreview ? (
+                    <div className="border border-gold/20 rounded-xl p-6 bg-black min-h-[200px]">
+                      <MarkdownContent content={pageForm.content} />
+                    </div>
+                  ) : (
+                    <textarea
+                      rows={14}
+                      value={pageForm.content}
+                      onChange={(e) => setPageForm({ ...pageForm, content: e.target.value })}
+                      className="w-full bg-black border border-gold/20 rounded-xl py-3 px-4 text-cream leading-relaxed"
+                    />
+                  )}
                 </div>
               )}
 
