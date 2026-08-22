@@ -7,7 +7,6 @@ import { motion } from "framer-motion";
 import {
   Heart,
   ShoppingCart,
-  Star,
   Eye,
   MessageCircle,
 } from "lucide-react";
@@ -236,25 +235,11 @@ ${window.location.origin}/product/${product.slug}
             
 
 
-            {/* Rating */}
+            {/* Reviews */}
             <div className="flex items-center gap-1 mb-4">
-
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  size={14}
-                  className={
-                    i < Math.floor(product.rating)
-                      ? "text-gold fill-gold"
-                      : "text-gold-muted"
-                  }
-                />
-              ))}
-
               <span className="text-sm text-gold-muted">
                 ({product.reviewCount})
               </span>
-
             </div>
 
 

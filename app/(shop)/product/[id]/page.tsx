@@ -11,7 +11,6 @@ import {
   Truck,
   Shield,
   RotateCcw,
-  Star,
   ChevronRight,
   ChevronLeft,
   Minus,
@@ -248,22 +247,8 @@ ${product.name}
               {product.name}
             </h1>
 
-            {/* Rating */}
+            {/* Reviews */}
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    size={18}
-                    className={
-                      i < Math.floor(product.rating)
-                        ? "text-gold fill-gold"
-                        : "text-gold-muted"
-                    }
-                  />
-                ))}
-              </div>
-              <span className="text-gold font-medium">{product.rating}</span>
               <span className="text-gold-muted">
                 ({product.reviewCount.toLocaleString("ar-EG")} تقييم)
               </span>
