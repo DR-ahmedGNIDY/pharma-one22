@@ -15,6 +15,7 @@ export function WhatsAppButton() {
       href={link}
       target="_blank"
       rel="noopener noreferrer"
+      aria-label="تواصل معنا عبر واتساب"
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       whileHover={{ scale: 1.1 }}
