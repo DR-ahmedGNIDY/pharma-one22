@@ -57,10 +57,24 @@ export function BrandsSection({
     return (
       <section className="py-16 bg-black border-b border-gold/10">
         <div className="container-luxury">
-          <div className="text-center">
-            <h2 className="text-4xl md:text-5xl font-extrabold text-[#D4AF37]">
-              جاري تحميل البراندات...
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <div className="h-px w-20 bg-gradient-to-r from-transparent to-[#D4AF37]" />
+              <span className="text-[#D4AF37] text-2xl">♛</span>
+              <div className="h-px w-20 bg-gradient-to-l from-transparent to-[#D4AF37]" />
+            </div>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-[#D4AF37] mb-4 drop-shadow-[0_0_20px_rgba(212,175,55,0.45)]">
+              البراندات العالمية
             </h2>
+          </div>
+
+          <div className="flex justify-center gap-5 overflow-hidden pb-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="shrink-0 w-[150px] h-[150px] rounded-3xl bg-white/5 animate-pulse"
+              />
+            ))}
           </div>
         </div>
       </section>
