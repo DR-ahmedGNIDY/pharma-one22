@@ -161,9 +161,8 @@ export interface FilterOptions {
   categories?: string[];
   minPrice?: number;
   maxPrice?: number;
-  rating?: number;
   isOnSale?: boolean;
   isNew?: boolean;
   isBestSeller?: boolean;
-  sortBy?: "price-asc" | "price-desc" | "rating" | "newest" | "best-seller";
+  sortBy?: "price-asc" | "price-desc" | "newest" | "best-seller";
 }

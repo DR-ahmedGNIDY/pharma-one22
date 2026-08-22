@@ -144,16 +144,6 @@ export default async function ProductPageLayout({
           name: "Pharma One Cosmetics",
         },
       },
-
-      ...(product.rating > 0 && {
-        aggregateRating: {
-          "@type": "AggregateRating",
-          ratingValue: String(product.rating),
-          reviewCount: String(product.reviewCount || 1),
-          bestRating: "5",
-          worstRating: "1",
-        },
-      }),
     };
   }
 

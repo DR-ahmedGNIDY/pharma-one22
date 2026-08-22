@@ -131,7 +131,6 @@ const catName =
     if (filters.isOnSale && !product.discountPrice) return false;
     if (filters.isNew && !product.isNewArrival) return false;
     if (filters.isBestSeller && !product.isBestSeller) return false;
-    if (filters.rating && product.rating < filters.rating) return false;
 
     return true;
 });
@@ -150,9 +149,6 @@ const sortedProducts = [...filteredProducts].sort((a: any, b: any) => {
         (b.discountPrice || b.price || 0) -
         (a.discountPrice || a.price || 0)
       );
-
-    case "rating":
-      return (b.rating || 0) - (a.rating || 0);
 
     case "best-seller":
       return Number(!!b.isBestSeller) - Number(!!a.isBestSeller);
@@ -220,7 +216,6 @@ const sortedProducts = [...filteredProducts].sort((a: any, b: any) => {
               <option value="newest">الأحدث</option>
               <option value="price-asc">السعر: من الأقل للأعلى</option>
               <option value="price-desc">السعر: من الأعلى للأقل</option>
-              <option value="rating">الأعلى تقييماً</option>
               <option value="best-seller">الأكثر مبيعاً</option>
             </select>
 
@@ -358,36 +353,6 @@ const sortedProducts = [...filteredProducts].sort((a: any, b: any) => {
                           الأكثر مبيعاً
                         </span>
                       </label>
-                    </div>
-                  </div>
-
-                  {/* Rating Filter */}
-                  <div className="luxury-card p-5">
-                    <h3 className="font-bold text-cream mb-4">التقييم</h3>
-                    <div className="space-y-2">
-                      {[4, 3, 2, 1].map((rating) => (
-                        <label key={rating} className="flex items-center gap-3 cursor-pointer group">
-                          <input
-                            type="radio"
-                            name="rating"
-                            checked={filters.rating === rating}
-                            onChange={() => setFilters({ ...filters, rating })}
-                            className="border-gold/20 bg-black text-gold focus:ring-gold"
-                          />
-                          <div className="flex items-center gap-1">
-                            {[...Array(5)].map((_, i) => (
-                              <svg
-                                key={i}
-                                className={`w-4 h-4 ${i < rating ? "text-gold fill-gold" : "text-gold-muted"}`}
-                                viewBox="0 0 20 20"
-                              >
-                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                              </svg>
-                            ))}
-                            <span className="text-sm text-gold-muted mr-1">وأعلى</span>
-                          </div>
-                        </label>
-                      ))}
                     </div>
                   </div>
 

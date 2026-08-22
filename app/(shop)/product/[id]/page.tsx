@@ -247,13 +247,6 @@ ${product.name}
               {product.name}
             </h1>
 
-            {/* Reviews */}
-            <div className="flex items-center gap-3">
-              <span className="text-gold-muted">
-                ({product.reviewCount.toLocaleString("ar-EG")} تقييم)
-              </span>
-            </div>
-
             {/* Price */}
             <div className="flex items-baseline gap-4">
               {hasDiscount ? (

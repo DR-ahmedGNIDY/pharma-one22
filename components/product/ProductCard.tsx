@@ -133,6 +133,7 @@ ${window.location.origin}/product/${product.slug}
               }
               alt={product.name}
               fill
+              sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, (max-width: 1280px) 30vw, 240px"
               className="
                 object-cover
                 transition-transform
@@ -160,6 +161,7 @@ ${window.location.origin}/product/${product.slug}
 
               {showQuickView && (
                 <button
+                  aria-label="معاينة سريعة"
                   className="
                     w-10
                     h-10
@@ -183,6 +185,7 @@ ${window.location.origin}/product/${product.slug}
             {/* Wishlist */}
             <button
               onClick={handleToggleWishlist}
+              aria-label={isInWishlist ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
               className="
                 absolute
                 top-3
@@ -233,14 +236,6 @@ ${window.location.origin}/product/${product.slug}
 
 
             
-
-
-            {/* Reviews */}
-            <div className="flex items-center gap-1 mb-4">
-              <span className="text-sm text-gold-muted">
-                ({product.reviewCount})
-              </span>
-            </div>
 
 
             {/* Price */}
