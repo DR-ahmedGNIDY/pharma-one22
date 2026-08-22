@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { LucideIcon } from "lucide-react";
-import { MarkdownContent } from "@/components/shared/MarkdownContent";
+import { RichContent } from "@/components/shared/RichContent";
 
 interface ContentPageProps {
   slug: string;
@@ -57,7 +57,7 @@ export function ContentPage({ slug, icon: Icon, tagline, fallbackTitle }: Conten
           {loading ? (
             <p className="text-gold-muted">جاري التحميل...</p>
           ) : (
-            <MarkdownContent content={content} />
+            <RichContent content={content} />
           )}
         </motion.div>
       </div>

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import sanitizeHtml from "sanitize-html";
 import dbConnect from "@/lib/db";
 import Page from "@/models/Page";
 import { requireAdmin } from "@/lib/requireAdmin";
@@ -6,6 +7,21 @@ import { PAGE_SLUGS, pageDefaults, PageSlug } from "@/lib/pageDefaults";
 
 function isValidSlug(slug: string): slug is PageSlug {
   return (PAGE_SLUGS as readonly string[]).includes(slug);
+}
+
+function sanitizePageContent(html: string): string {
+  return sanitizeHtml(html, {
+    allowedTags: ["p", "h2", "h3", "strong", "em", "ul", "ol", "li", "br", "span"],
+    allowedAttributes: {
+      "*": ["style"],
+    },
+    allowedStyles: {
+      "*": {
+        "text-align": [/^(right|left|center|justify)$/],
+        "font-size": [/^\d+(?:px|rem|em)$/],
+      },
+    },
+  });
 }
 
 export async function GET(
@@ -65,7 +81,7 @@ export async function PUT(
 
     const update: Record<string, unknown> = {};
     if (typeof title === "string") update.title = title;
-    if (typeof content === "string") update.content = content;
+    if (typeof content === "string") update.content = sanitizePageContent(content);
     if (slug === "faq" && Array.isArray(faqs)) update.faqs = faqs;
 
     const page = await Page.findOneAndUpdate(

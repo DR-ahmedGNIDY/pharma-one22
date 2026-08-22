@@ -176,6 +176,68 @@ h3 {
     0 0 8px rgba(212, 175, 55, 0.15);
 }
 
+/* ===== Rich text page content (about/privacy/terms/return-policy) ===== */
+
+.rich-content {
+  color: rgba(212, 175, 55, 0.85);
+  line-height: 2;
+}
+
+.rich-content p {
+  margin-bottom: 1.1rem;
+}
+
+.rich-content p:last-child {
+  margin-bottom: 0;
+}
+
+.rich-content h2 {
+  color: #C9A84C;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.rich-content h2:first-child {
+  margin-top: 0;
+}
+
+.rich-content h3 {
+  color: #E8D5A3;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.rich-content strong {
+  color: #F5F5F5;
+  font-weight: 700;
+}
+
+.rich-content ul,
+.rich-content ol {
+  margin-bottom: 1.1rem;
+  padding-right: 1.25rem;
+}
+
+.rich-content ul {
+  list-style: disc;
+}
+
+.rich-content ol {
+  list-style: decimal;
+}
+
+.rich-content li {
+  margin-bottom: 0.5rem;
+}
+
+.rich-content li::marker {
+  color: #C9A84C;
+}
+
 /* ===== Mobile ===== */
 
 @media (max-width: 768px) {

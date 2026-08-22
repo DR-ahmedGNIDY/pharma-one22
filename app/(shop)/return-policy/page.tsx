@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Shield, Phone } from "lucide-react";
 import Link from "next/link";
-import { MarkdownContent } from "@/components/shared/MarkdownContent";
+import { RichContent } from "@/components/shared/RichContent";
 
 export default function ReturnPolicyPage() {
   const [title, setTitle] = useState("سياسة الاسترجاع والاستبدال");
@@ -56,7 +56,7 @@ export default function ReturnPolicyPage() {
           {loading ? (
             <p className="text-gold-muted">جاري التحميل...</p>
           ) : (
-            <MarkdownContent content={content} />
+            <RichContent content={content} />
           )}
         </motion.div>
 
