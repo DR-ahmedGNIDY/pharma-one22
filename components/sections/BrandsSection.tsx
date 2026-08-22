@@ -90,6 +90,7 @@ export function BrandsSection({
           <div className="flex justify-center gap-3 mb-8">
             <button
               onClick={() => scroll("right")}
+              aria-label="التمرير لليمين"
               className="w-10 h-10 rounded-full border border-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-[0_0_15px_rgba(212,175,55,0.25)] transition-all"
             >
               <ChevronRight size={18} />
@@ -97,6 +98,7 @@ export function BrandsSection({
 
             <button
               onClick={() => scroll("left")}
+              aria-label="التمرير لليسار"
               className="w-10 h-10 rounded-full border border-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37] hover:border-[#D4AF37] hover:shadow-[0_0_15px_rgba(212,175,55,0.25)] transition-all"
             >
               <ChevronLeft size={18} />

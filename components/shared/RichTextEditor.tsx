@@ -70,6 +70,7 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={btnClass(editor.isActive("bold"))}
           title="عريض"
+          aria-label="عريض"
         >
           <BoldIcon size={16} />
         </button>
@@ -81,6 +82,7 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
           onClick={() => editor.chain().focus().setTextAlign("right").run()}
           className={btnClass(editor.isActive({ textAlign: "right" }))}
           title="محاذاة يمين"
+          aria-label="محاذاة يمين"
         >
           <AlignRight size={16} />
         </button>
@@ -89,6 +91,7 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
           onClick={() => editor.chain().focus().setTextAlign("center").run()}
           className={btnClass(editor.isActive({ textAlign: "center" }))}
           title="توسيط"
+          aria-label="توسيط"
         >
           <AlignCenter size={16} />
         </button>
@@ -97,6 +100,7 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
           onClick={() => editor.chain().focus().setTextAlign("left").run()}
           className={btnClass(editor.isActive({ textAlign: "left" }))}
           title="محاذاة يسار"
+          aria-label="محاذاة يسار"
         >
           <AlignLeft size={16} />
         </button>
@@ -108,6 +112,7 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
           onClick={() => stepFontSize(-1)}
           className={btnClass(false)}
           title="تصغير الخط"
+          aria-label="تصغير الخط"
         >
           <Minus size={16} />
         </button>
@@ -119,6 +124,7 @@ export function RichTextEditor({ content, onChange }: RichTextEditorProps) {
           onClick={() => stepFontSize(1)}
           className={btnClass(false)}
           title="تكبير الخط"
+          aria-label="تكبير الخط"
         >
           <Plus size={16} />
         </button>

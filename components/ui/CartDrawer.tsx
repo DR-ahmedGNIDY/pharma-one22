@@ -21,6 +21,7 @@ export function CartDrawer() {
       {/* Cart Toggle Button */}
       <button
         onClick={() => setIsOpen(true)}
+        aria-label="فتح سلة التسوق"
         className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-gradient-to-br from-gold to-gold-dark rounded-full flex items-center justify-center shadow-lg shadow-gold/30 hover:shadow-gold/50 transition-shadow"
       >
         <ShoppingBag size={22} className="text-black" />
@@ -58,6 +59,7 @@ export function CartDrawer() {
                 <h2 className="text-xl font-bold gold-text">سلة التسوق</h2>
                 <button
                   onClick={() => setIsOpen(false)}
+                  aria-label="إغلاق السلة"
                   className="p-2 text-gold-muted hover:text-gold transition-colors"
                 >
                   <X size={24} />
@@ -112,6 +114,7 @@ export function CartDrawer() {
                                 onClick={() =>
                                   updateQuantity(item.product._id, item.quantity - 1)
                                 }
+                                aria-label="إنقاص الكمية"
                                 className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center text-gold hover:bg-gold hover:text-black transition-colors"
                               >
                                 <Minus size={14} />
@@ -123,6 +126,7 @@ export function CartDrawer() {
                                 onClick={() =>
                                   updateQuantity(item.product._id, item.quantity + 1)
                                 }
+                                aria-label="زيادة الكمية"
                                 className="w-7 h-7 rounded-full bg-gold/10 flex items-center justify-center text-gold hover:bg-gold hover:text-black transition-colors"
                               >
                                 <Plus size={14} />
@@ -130,6 +134,7 @@ export function CartDrawer() {
                             </div>
                             <button
                               onClick={() => removeItem(item.product._id)}
+                              aria-label="حذف من السلة"
                               className="p-1.5 text-red-400 hover:text-red-300 transition-colors"
                             >
                               <Trash2 size={16} />

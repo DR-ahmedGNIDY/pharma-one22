@@ -102,10 +102,10 @@ export function Footer() {
   ];
 
   const socialIcons = [
-    { icon: Facebook, href: settings.socialLinks.facebook },
-    { icon: Instagram, href: settings.socialLinks.instagram },
-    { icon: Twitter, href: settings.socialLinks.twitter },
-    { icon: Youtube, href: settings.socialLinks.youtube },
+    { icon: Facebook, href: settings.socialLinks.facebook, label: "فيسبوك" },
+    { icon: Instagram, href: settings.socialLinks.instagram, label: "انستجرام" },
+    { icon: Twitter, href: settings.socialLinks.twitter, label: "تويتر" },
+    { icon: Youtube, href: settings.socialLinks.youtube, label: "يوتيوب" },
   ].filter((s) => s.href);
 
   const scrollToTop = () => {
@@ -198,6 +198,7 @@ export function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label={social.label}
                     className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold hover:bg-gold hover:text-black transition-all"
                   >
                     <social.icon size={18} />
@@ -264,6 +265,7 @@ export function Footer() {
             </p>
             <button
               onClick={scrollToTop}
+              aria-label="العودة لأعلى الصفحة"
               className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold hover:bg-gold hover:text-black transition-all"
             >
               <ChevronUp size={20} />

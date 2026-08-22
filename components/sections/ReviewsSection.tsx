@@ -129,6 +129,7 @@ export function ReviewsSection() {
           <div className="flex items-center justify-center gap-3 mt-4">
             <button
               onClick={prevReview}
+              aria-label="التقييم السابق"
               className="w-12 h-12 rounded-full border border-gold/15 flex items-center justify-center text-gold/60 hover:border-gold/40 hover:text-gold transition-all"
             >
               <ChevronRight size={22} />
@@ -139,6 +140,7 @@ export function ReviewsSection() {
                 <button
                   key={index}
                   onClick={() => setCurrentIndex(index)}
+                  aria-label={`عرض تقييم رقم ${index + 1}`}
                   className={`h-1.5 rounded-full transition-all ${
                     index === currentIndex
                       ? "bg-gold w-5"
@@ -150,6 +152,7 @@ export function ReviewsSection() {
 
             <button
               onClick={nextReview}
+              aria-label="التقييم التالي"
               className="w-7 h-7 rounded-full border border-gold/15 flex items-center justify-center text-gold/60 hover:border-gold/40 hover:text-gold transition-all"
             >
               <ChevronLeft size={22} />

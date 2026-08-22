@@ -78,15 +78,22 @@ export function ProductsSection({
         {/* Products Slider */}
         <div
           ref={scrollRef}
-          className="flex gap-3 overflow-x-auto pb-2 min-h-[430px]"
+          className="flex gap-3 overflow-x-auto pb-2"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {products.length === 0 &&
             Array.from({ length: 4 }).map((_, i) => (
-              <div
-                key={i}
-                className="shrink-0 w-[240px] aspect-[240/430] rounded-2xl bg-white/5 animate-pulse"
-              />
+              <div key={i} className="shrink-0 w-[240px] luxury-card animate-pulse">
+                <div className="aspect-square rounded-t-2xl bg-white/5" />
+                <div className="p-4 space-y-3">
+                  <div className="h-7 w-4/5 rounded bg-white/5" />
+                  <div className="h-5 w-2/5 rounded bg-white/5" />
+                  <div className="h-4 w-1/3 rounded bg-white/5" />
+                  <div className="h-8 w-1/2 rounded bg-white/5" />
+                  <div className="h-[42px] rounded-xl bg-white/5" />
+                  <div className="h-[42px] rounded-xl bg-white/5" />
+                </div>
+              </div>
             ))}
           {products.map((product, index) => (
             <motion.div
