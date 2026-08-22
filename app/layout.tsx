@@ -101,7 +101,6 @@ export const metadata: Metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 0.85,
-  maximumScale: 1,
 };
 
 /* ── Organisation + WebSite JSON-LD ─────────────────────────────────────── */

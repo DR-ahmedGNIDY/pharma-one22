@@ -131,7 +131,7 @@ export function Footer() {
                   <feature.icon className="text-gold" size={22} />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-cream">{feature.title}</h4>
+                  <p className="text-sm font-bold text-cream">{feature.title}</p>
                   <p className="text-xs text-gold-muted">{feature.desc}</p>
                 </div>
               </motion.div>
@@ -145,9 +145,9 @@ export function Footer() {
         <div className="bg-gradient-to-r from-gold/10 to-transparent rounded-2xl p-8 md:p-12 border border-gold/20">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-right">
-              <h3 className="text-2xl font-bold gold-text mb-4">
+              <h2 className="text-2xl font-bold gold-text mb-4">
                 اشتركي في نشرتنا البريدية
-              </h3>
+              </h2>
               <p className="text-gold-muted">
                 واحصلي على أحدث العروض والمنتجات الجديدة
               </p>
@@ -215,7 +215,7 @@ export function Footer() {
             "تواصل معنا": contactLinks,
           }).map(([title, links]) => (
             <div key={title}>
-              <h4 className="text-gold font-bold mb-4 text-sm">{title}</h4>
+              <h3 className="text-gold font-bold mb-4 text-sm">{title}</h3>
               <ul className="space-y-3">
                 {links.map((link) => (
                   <li key={link.name}>
