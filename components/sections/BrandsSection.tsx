@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { ChevronRight, ChevronLeft } from "lucide-react";
@@ -27,6 +28,7 @@ export function BrandsSection({
   selectedBrand,
   onSelectBrand,
 }: BrandsSectionProps) {
+  const router = useRouter();
   const trackRef = useRef<HTMLDivElement>(null);
 
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -38,6 +40,11 @@ export function BrandsSection({
   const lastTimeRef = useRef<number | null>(null);
   const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const setWidthRef = useRef(0);
+
+  const draggingRef = useRef(false);
+  const dragStartXRef = useRef(0);
+  const dragStartOffsetRef = useRef(0);
+  const dragMovedRef = useRef(false);
 
   useEffect(() => {
     loadBrands();
@@ -119,18 +126,23 @@ export function BrandsSection({
     }, RESUME_DELAY);
   }, []);
 
+  const wrapOffset = (value: number) => {
+    const width = setWidthRef.current;
+    if (value >= 0 || value <= -width) {
+      return ((value % width) + width) % width - width;
+    }
+    return value;
+  };
+
   const scroll = (direction: "left" | "right") => {
     if (setWidthRef.current === 0) return;
 
     pauseTemporarily();
 
     const step = 350;
-    offsetRef.current += direction === "right" ? step : -step;
-
-    if (offsetRef.current >= 0 || offsetRef.current <= -setWidthRef.current) {
-      const width = setWidthRef.current;
-      offsetRef.current = ((offsetRef.current % width) + width) % width - width;
-    }
+    offsetRef.current = wrapOffset(
+      offsetRef.current + (direction === "right" ? step : -step)
+    );
 
     if (trackRef.current) {
       trackRef.current.style.transform = `translateX(${offsetRef.current}px)`;
@@ -139,6 +151,57 @@ export function BrandsSection({
         if (trackRef.current) trackRef.current.style.transition = "";
       }, 400);
     }
+  };
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (setWidthRef.current === 0) return;
+
+    draggingRef.current = true;
+    dragMovedRef.current = false;
+    dragStartXRef.current = e.clientX;
+    dragStartOffsetRef.current = offsetRef.current;
+    pausedRef.current = true;
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!draggingRef.current) return;
+
+    const delta = e.clientX - dragStartXRef.current;
+    if (Math.abs(delta) > 5) dragMovedRef.current = true;
+
+    offsetRef.current = wrapOffset(dragStartOffsetRef.current + delta);
+
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translateX(${offsetRef.current}px)`;
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    if (!draggingRef.current) return;
+
+    draggingRef.current = false;
+    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    }
+    pauseTemporarily();
+  };
+
+  const handleBrandClick = (slug: string) => {
+    if (dragMovedRef.current) {
+      dragMovedRef.current = false;
+      return;
+    }
+
+    if (selectedBrand === slug) {
+      onSelectBrand(null);
+      return;
+    }
+
+    onSelectBrand(slug);
+    router.push(`/brand/${slug}`);
   };
 
   if (loading) {
@@ -215,14 +278,19 @@ export function BrandsSection({
 
         <div
           dir="ltr"
-          className="overflow-hidden pb-4"
+          className="overflow-hidden pb-4 cursor-grab active:cursor-grabbing touch-pan-y"
           onMouseEnter={() => {
-            pausedRef.current = true;
+            if (!draggingRef.current) pausedRef.current = true;
           }}
           onMouseLeave={() => {
+            if (draggingRef.current) return;
             if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
             pausedRef.current = false;
           }}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
         >
           <div
             ref={trackRef}
@@ -238,11 +306,7 @@ export function BrandsSection({
                 className="shrink-0"
               >
                 <div
-                  onClick={() =>
-                    onSelectBrand(
-                      selectedBrand === brand.slug ? null : brand.slug
-                    )
-                  }
+                  onClick={() => handleBrandClick(brand.slug)}
                   className="cursor-pointer"
                 >
                   <div
