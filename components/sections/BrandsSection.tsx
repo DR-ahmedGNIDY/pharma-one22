@@ -62,28 +62,44 @@ export function BrandsSection({
   useEffect(() => {
     if (brands.length === 0) return;
 
-    setWidthRef.current = brands.length * (CARD_WIDTH + CARD_GAP);
-    offsetRef.current = 0;
+    const setWidth = brands.length * (CARD_WIDTH + CARD_GAP);
+    setWidthRef.current = setWidth;
+    offsetRef.current = -setWidth;
     lastTimeRef.current = null;
 
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translateX(${offsetRef.current}px)`;
+    }
+
     const tick = (time: number) => {
-      if (lastTimeRef.current === null) lastTimeRef.current = time;
-      const delta = time - lastTimeRef.current;
-      lastTimeRef.current = time;
-
-      if (!pausedRef.current && setWidthRef.current > 0) {
-        offsetRef.current -= (AUTO_SPEED * delta) / 1000;
-
-        if (offsetRef.current <= -setWidthRef.current) {
-          offsetRef.current += setWidthRef.current;
-        }
-
-        if (trackRef.current) {
-          trackRef.current.style.transform = `translateX(${offsetRef.current}px)`;
-        }
-      }
-
+      // Always reschedule first — any error below must never permanently
+      // kill the loop (a dead loop silently freezes the marquee forever).
       rafRef.current = requestAnimationFrame(tick);
+
+      try {
+        if (lastTimeRef.current === null) lastTimeRef.current = time;
+        // Clamp delta so a throttled/backgrounded tab can't produce a huge
+        // single-frame jump when it regains focus.
+        const delta = Math.min(time - lastTimeRef.current, 200);
+        lastTimeRef.current = time;
+
+        if (!pausedRef.current && setWidthRef.current > 0) {
+          offsetRef.current += (AUTO_SPEED * delta) / 1000;
+
+          // Modulo-safe wrap: works even after a large jump, not just a
+          // single-setWidth step.
+          if (offsetRef.current >= 0) {
+            offsetRef.current =
+              (offsetRef.current % setWidthRef.current) - setWidthRef.current;
+          }
+
+          if (trackRef.current) {
+            trackRef.current.style.transform = `translateX(${offsetRef.current}px)`;
+          }
+        }
+      } catch (error) {
+        console.error("BRANDS MARQUEE TICK ERROR:", error);
+      }
     };
 
     rafRef.current = requestAnimationFrame(tick);
@@ -111,10 +127,9 @@ export function BrandsSection({
     const step = 350;
     offsetRef.current += direction === "right" ? step : -step;
 
-    if (offsetRef.current > 0) {
-      offsetRef.current -= setWidthRef.current;
-    } else if (offsetRef.current <= -setWidthRef.current) {
-      offsetRef.current += setWidthRef.current;
+    if (offsetRef.current >= 0 || offsetRef.current <= -setWidthRef.current) {
+      const width = setWidthRef.current;
+      offsetRef.current = ((offsetRef.current % width) + width) % width - width;
     }
 
     if (trackRef.current) {
