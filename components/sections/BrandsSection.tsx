@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 
 interface Brand {
   _id: string;
   name: string;
   slug: string;
+  logo: string;
 }
 
 interface BrandsSectionProps {
@@ -15,14 +17,27 @@ interface BrandsSectionProps {
   onSelectBrand: (brand: string | null) => void;
 }
 
+const CARD_WIDTH = 150;
+const CARD_GAP = 20; // gap-5
+const AUTO_SPEED = 40; // px per second
+const COPIES = 4;
+const RESUME_DELAY = 1600; // ms after manual interaction before auto-scroll resumes
+
 export function BrandsSection({
   selectedBrand,
   onSelectBrand,
 }: BrandsSectionProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
 
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const offsetRef = useRef(0);
+  const pausedRef = useRef(false);
+  const rafRef = useRef<number | null>(null);
+  const lastTimeRef = useRef<number | null>(null);
+  const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const setWidthRef = useRef(0);
 
   useEffect(() => {
     loadBrands();
@@ -44,12 +59,70 @@ export function BrandsSection({
     }
   };
 
+  useEffect(() => {
+    if (brands.length === 0) return;
+
+    setWidthRef.current = brands.length * (CARD_WIDTH + CARD_GAP);
+    offsetRef.current = 0;
+    lastTimeRef.current = null;
+
+    const tick = (time: number) => {
+      if (lastTimeRef.current === null) lastTimeRef.current = time;
+      const delta = time - lastTimeRef.current;
+      lastTimeRef.current = time;
+
+      if (!pausedRef.current && setWidthRef.current > 0) {
+        offsetRef.current -= (AUTO_SPEED * delta) / 1000;
+
+        if (offsetRef.current <= -setWidthRef.current) {
+          offsetRef.current += setWidthRef.current;
+        }
+
+        if (trackRef.current) {
+          trackRef.current.style.transform = `translateX(${offsetRef.current}px)`;
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    };
+  }, [brands]);
+
+  const pauseTemporarily = useCallback(() => {
+    pausedRef.current = true;
+
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    resumeTimeoutRef.current = setTimeout(() => {
+      pausedRef.current = false;
+    }, RESUME_DELAY);
+  }, []);
+
   const scroll = (direction: "left" | "right") => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({
-        left: direction === "left" ? -350 : 350,
-        behavior: "smooth",
-      });
+    if (setWidthRef.current === 0) return;
+
+    pauseTemporarily();
+
+    const step = 350;
+    offsetRef.current += direction === "right" ? step : -step;
+
+    if (offsetRef.current > 0) {
+      offsetRef.current -= setWidthRef.current;
+    } else if (offsetRef.current <= -setWidthRef.current) {
+      offsetRef.current += setWidthRef.current;
+    }
+
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translateX(${offsetRef.current}px)`;
+      trackRef.current.style.transition = "transform 0.4s ease";
+      setTimeout(() => {
+        if (trackRef.current) trackRef.current.style.transition = "";
+      }, 400);
     }
   };
 
@@ -80,6 +153,11 @@ export function BrandsSection({
       </section>
     );
   }
+
+  const loopedBrands =
+    brands.length > 0
+      ? Array.from({ length: COPIES }).flatMap(() => brands)
+      : [];
 
   return (
     <section className="py-16 bg-black border-b border-gold/10">
@@ -121,84 +199,86 @@ export function BrandsSection({
         )}
 
         <div
-          ref={scrollRef}
-          className="flex gap-5 overflow-x-auto pb-4"
-          style={{
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
+          className="overflow-hidden pb-4"
+          onMouseEnter={() => {
+            pausedRef.current = true;
+          }}
+          onMouseLeave={() => {
+            if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+            pausedRef.current = false;
           }}
         >
-          {brands.map((brand, index) => (
-            <motion.div
-              key={brand._id}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.04 }}
-              className="shrink-0"
-            >
-              <div
-                onClick={() =>
-                  onSelectBrand(
-                    selectedBrand === brand.slug
-                      ? null
-                      : brand.slug
-                  )
-                }
-                className="cursor-pointer"
+          <div
+            ref={trackRef}
+            className="flex gap-5 w-max will-change-transform"
+          >
+            {loopedBrands.map((brand, index) => (
+              <motion.div
+                key={`${brand._id}-${index}`}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: (index % brands.length) * 0.04 }}
+                className="shrink-0"
               >
                 <div
-                  className={`
-                    w-[150px]
-                    h-[150px]
-                    rounded-3xl
-                    flex
-                    items-center
-                    justify-center
-                    p-5
-                    transition-all
-                    duration-500
-
-                    ${
-                      selectedBrand === brand.slug
-                        ? `
-                          bg-gradient-to-b
-                          from-[#2a2110]
-                          to-[#0B0B0B]
-                          border
-                          border-[#D4AF37]
-                          shadow-[0_0_35px_rgba(212,175,55,0.45)]
-                          scale-105
-                        `
-                        : `
-                          bg-gradient-to-b
-                          from-[#181818]
-                          to-[#0B0B0B]
-                          border
-                          border-[#D4AF37]/20
-                          hover:border-[#D4AF37]
-                          hover:-translate-y-2
-                          hover:shadow-[0_0_25px_rgba(212,175,55,0.25)]
-                        `
-                    }
-                  `}
+                  onClick={() =>
+                    onSelectBrand(
+                      selectedBrand === brand.slug ? null : brand.slug
+                    )
+                  }
+                  className="cursor-pointer"
                 >
-                  <span
-                    className="
-                      text-[#D4AF37]
-                      font-bold
-                      text-lg
-                      tracking-wide
-                      text-center
-                      drop-shadow-[0_0_8px_rgba(212,175,55,0.35)]
-                    "
+                  <div
+                    className={`
+                      w-[150px]
+                      h-[150px]
+                      rounded-3xl
+                      flex
+                      items-center
+                      justify-center
+                      p-5
+                      transition-all
+                      duration-500
+
+                      ${
+                        selectedBrand === brand.slug
+                          ? `
+                            bg-gradient-to-b
+                            from-[#2a2110]
+                            to-[#0B0B0B]
+                            border
+                            border-[#D4AF37]
+                            shadow-[0_0_35px_rgba(212,175,55,0.45)]
+                            scale-105
+                          `
+                          : `
+                            bg-gradient-to-b
+                            from-[#181818]
+                            to-[#0B0B0B]
+                            border
+                            border-[#D4AF37]/20
+                            hover:border-[#D4AF37]
+                            hover:-translate-y-2
+                            hover:shadow-[0_0_25px_rgba(212,175,55,0.25)]
+                          `
+                      }
+                    `}
                   >
-                    {brand.name}
-                  </span>
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={brand.logo}
+                        alt={brand.name}
+                        fill
+                        sizes="150px"
+                        className="object-contain drop-shadow-[0_0_8px_rgba(212,175,55,0.15)]"
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </div>
         </div>
 
         {brands.length === 0 && (
