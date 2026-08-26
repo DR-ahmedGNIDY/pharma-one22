@@ -214,6 +214,7 @@ export function BrandsSection({
         )}
 
         <div
+          dir="ltr"
           className="overflow-hidden pb-4"
           onMouseEnter={() => {
             pausedRef.current = true;
