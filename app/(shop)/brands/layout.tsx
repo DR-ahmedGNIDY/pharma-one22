@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { siteUrl, defaultOgImages, defaultTwitterImages } from "@/lib/seo";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pharma-one.com";
+
 
 export const metadata: Metadata = {
   title: "البراندات العالمية | أكثر من 100 براند أصيل",
@@ -15,11 +16,13 @@ export const metadata: Metadata = {
       "أكثر من 100 براند عالمي أصيل في مكان واحد — تسوقي براندك المفضل الآن.",
     url: `${siteUrl}/brands`,
     type: "website",
+    images: defaultOgImages,
   },
   twitter: {
     card: "summary",
     title: "البراندات العالمية | فارما وان كوزماتيكس",
     description: "أكثر من 100 براند عالمي أصيل.",
+    images: defaultTwitterImages,
   },
 };
 

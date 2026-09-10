@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pharma-one.com";
+import { siteUrl, defaultOgImages, defaultTwitterImages } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "سياسة الخصوصية | فارما وان كوزماتيكس",
@@ -13,6 +12,7 @@ export const metadata: Metadata = {
     description: "سياسة الخصوصية وحماية البيانات في فارما وان كوزماتيكس.",
     url: `${siteUrl}/privacy`,
     type: "website",
+    images: defaultOgImages,
   },
 };
 

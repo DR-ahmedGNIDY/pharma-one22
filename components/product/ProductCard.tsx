@@ -71,7 +71,7 @@ ${product.name}
 )}
 
 رابط المنتج:
-${window.location.origin}/product/${product.slug}
+${window.location.origin}/product/${product._id}
 `;
 
     window.open(

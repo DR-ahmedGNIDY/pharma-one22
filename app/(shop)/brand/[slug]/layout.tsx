@@ -2,8 +2,9 @@ import { cache } from "react";
 import type { Metadata } from "next";
 import dbConnect from "@/lib/db";
 import Brand from "@/models/Brand";
+import { siteUrl } from "@/lib/seo";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pharma-one.com";
+
 
 const getBrand = cache(async (slug: string) => {
   try {

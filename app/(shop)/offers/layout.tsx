@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { siteUrl, defaultOgImages, defaultTwitterImages } from "@/lib/seo";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pharma-one.com";
+
 
 export const metadata: Metadata = {
   title: "عروض حصرية وخصومات | تخفيضات تصل إلى 50%",
@@ -15,11 +16,13 @@ export const metadata: Metadata = {
       "خصومات تصل إلى 50% على منتجات التجميل العالمية. عروض محدودة — اطلبي الآن!",
     url: `${siteUrl}/offers`,
     type: "website",
+    images: defaultOgImages,
   },
   twitter: {
     card: "summary_large_image",
     title: "عروض حصرية | فارما وان كوزماتيكس",
     description: "خصومات تصل إلى 50% على منتجات التجميل العالمية.",
+    images: defaultTwitterImages,
   },
 };
 

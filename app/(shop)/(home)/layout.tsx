@@ -1,20 +1,33 @@
 import type { Metadata } from "next";
+import { siteUrl, defaultOgImages, defaultTwitterImages } from "@/lib/seo";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pharma-one.com";
+
 
 export const metadata: Metadata = {
-  title: "فارما وان كوزماتيكس | Pharma One Cosmetics",
+  // `absolute` opts out of the root template ("%s | فارما وان كوزماتيكس").
+  // Without it the homepage title renders the brand name twice.
+  title: {
+    absolute: "فارما وان كوزماتيكس | متجر منتجات التجميل والعناية في مصر",
+  },
   description:
     "اكتشفي أكثر من 7000 منتج تجميل وعناية من أشهر البراندات العالمية بأسعار مميزة وتوصيل سريع لجميع أنحاء مصر.",
   alternates: {
-    canonical: `${siteUrl}/home`,
+    canonical: siteUrl,
   },
   openGraph: {
     title: "فارما وان كوزماتيكس | الصفحة الرئيسية",
     description:
       "أكثر من 7000 منتج تجميل من 100+ براند عالمي — مكياج، عناية بالبشرة، عطور وأكثر.",
-    url: `${siteUrl}/home`,
+    url: siteUrl,
     type: "website",
+    images: defaultOgImages,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "فارما وان كوزماتيكس | الصفحة الرئيسية",
+    description:
+      "أكثر من 7000 منتج تجميل من 100+ براند عالمي — مكياج، عناية بالبشرة، عطور وأكثر.",
+    images: defaultTwitterImages,
   },
 };
 

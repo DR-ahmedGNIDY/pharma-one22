@@ -2,13 +2,14 @@ import type { MetadataRoute } from "next";
 import dbConnect from "@/lib/db";
 import Product from "@/models/Product";
 import Brand from "@/models/Brand";
+import { siteUrl } from "@/lib/seo";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pharma-one.com";
+
 
 /* Static pages that always appear in the sitemap */
 const staticRoutes: MetadataRoute.Sitemap = [
   {
-    url: `${siteUrl}/home`,
+    url: siteUrl,
     lastModified: new Date(),
     changeFrequency: "daily",
     priority: 1.0,

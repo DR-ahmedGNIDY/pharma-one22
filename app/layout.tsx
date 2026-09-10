@@ -1,8 +1,9 @@
 ﻿import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "@/components/providers";
+import { siteUrl } from "@/lib/seo";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pharma-one.com";
+
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -80,10 +81,10 @@ export const metadata: Metadata = {
     images: ["/og-image.jpg"],
   },
 
-  alternates: {
-    canonical: siteUrl,
-    languages: { "ar-EG": siteUrl },
-  },
+  // NOTE: no `alternates.canonical` here on purpose. A canonical set on the
+  // root layout is inherited by every child route that does not declare its
+  // own, which made pages like /cart and /wishlist claim "/" as their
+  // canonical. Each route sets its own canonical in its own layout.
 
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION,
@@ -114,9 +115,9 @@ const orgJsonLd = {
       url: siteUrl,
       logo: {
         "@type": "ImageObject",
-        url: `${siteUrl}/logo1.webp`,
-        width: 200,
-        height: 60,
+        url: `${siteUrl}/images/logo1.webp`,
+        width: 1536,
+        height: 1024,
       },
       contactPoint: {
         "@type": "ContactPoint",

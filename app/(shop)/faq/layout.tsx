@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import { siteUrl, defaultOgImages, defaultTwitterImages } from "@/lib/seo";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pharma-one.com";
+
 
 export const metadata: Metadata = {
   title: "الأسئلة الشائعة | فارما وان كوزماتيكس",
@@ -14,6 +15,7 @@ export const metadata: Metadata = {
     description: "كل ما تحتاج معرفته عن الطلبات والشحن والإرجاع.",
     url: `${siteUrl}/faq`,
     type: "website",
+    images: defaultOgImages,
   },
 };
 

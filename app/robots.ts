@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
+import { siteUrl } from "@/lib/seo";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pharma-one.com";
+
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -8,13 +9,18 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
+        // NOTE: /_next/ must stay crawlable — it serves the JS, CSS and
+        // optimised images Googlebot needs to render the site and to
+        // discover product imagery via /_next/image.
         disallow: [
-          "/admin",
           "/admin/",
-          "/account",
           "/account/",
           "/api/",
-          "/_next/",
+          "/cart",
+          "/wishlist",
+          "/login",
+          "/register",
+          "/forgot-password",
         ],
       },
     ],
