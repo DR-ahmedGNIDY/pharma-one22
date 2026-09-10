@@ -20,7 +20,8 @@ export async function GET(
       );
     }
 
-    const product = await Product.findById(id)
+    // Deactivated products must read as "not found" on the public API.
+    const product = await Product.findOne({ _id: id, isActive: true })
       .populate("brand")
       .populate("category");
 

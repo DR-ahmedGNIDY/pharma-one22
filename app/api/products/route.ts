@@ -109,11 +109,15 @@ export async function GET(req: NextRequest) {
     const isOffer = searchParams.get("isOffer");
     const brandSlug = searchParams.get("brandSlug");
     const category = searchParams.get("category");
+    const categorySlug = searchParams.get("categorySlug");
     const search = searchParams.get("search");
     const pageParam = searchParams.get("page");
     const limitParam = searchParams.get("limit");
 
-    const filter: Record<string, unknown> = {};
+    // Public listing: never expose products the admin has deactivated. They
+    // are excluded from the sitemap too, so serving them here would let Google
+    // discover URLs the site itself says should not exist.
+    const filter: Record<string, unknown> = { isActive: true };
     if (isOffer === "true") filter.isOffer = true;
     if (category) filter.category = category;
     if (search) filter.name = { $regex: search, $options: "i" };
@@ -123,6 +127,16 @@ export async function GET(req: NextRequest) {
       const brand = await Brand.findOne({ slug: brandSlug }).select("_id").lean();
       if (brand) {
         filter.brand = (brand as any)._id.toString();
+      } else {
+        return NextResponse.json({ success: true, products: [] });
+      }
+    }
+
+    if (categorySlug) {
+      const Category = (await import("@/models/Category")).default;
+      const categoryDoc = await Category.findOne({ slug: categorySlug }).select("_id").lean();
+      if (categoryDoc) {
+        filter.category = (categoryDoc as any)._id.toString();
       } else {
         return NextResponse.json({ success: true, products: [] });
       }

@@ -1,25 +1,11 @@
-import { cache } from "react";
 import type { Metadata } from "next";
-import { Types } from "mongoose";
-import dbConnect from "@/lib/db";
-import Product from "@/models/Product";
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pharma-one.com";
-
-/* ── Single DB fetch per request (deduped by React cache) ─────────────── */
-const getProduct = cache(async (id: string) => {
-  if (!Types.ObjectId.isValid(id)) return null;
-  try {
-    await dbConnect();
-    const product = await Product.findById(id)
-      .populate("brand", "name slug")
-      .populate("category", "name slug")
-      .lean();
-    return product as any;
-  } catch {
-    return null;
-  }
-});
+import { siteUrl, defaultOgImages } from "@/lib/seo";
+import {
+  getProduct,
+  refName,
+  refSlug,
+  truncateForMeta,
+} from "@/lib/products";
 
 /* ── Dynamic metadata ──────────────────────────────────────────────────── */
 export async function generateMetadata({
@@ -34,30 +20,26 @@ export async function generateMetadata({
     return {
       title: "المنتج غير موجود",
       description: "عذراً، هذا المنتج غير متوفر.",
-      robots: { index: false, follow: false },
+      robots: { index: false, follow: true },
     };
   }
 
-  const brandName =
-    typeof product.brand === "object" ? product.brand?.name : product.brand;
-  const categoryName =
-    typeof product.category === "object"
-      ? product.category?.name
-      : product.category;
+  const brandName = refName(product.brand);
+  const categoryName = refName(product.category);
 
   const title = `${product.name}${brandName ? ` - ${brandName}` : ""}`;
-  const description = (
+
+  // Fall back to a composed description when the product has no copy of its
+  // own, so no product page ships an empty meta description.
+  const rawDescription =
     product.shortDescription ||
     product.description ||
-    ""
-  )
-    .replace(/\s+/g, " ")
-    .trim()
-    .substring(0, 160);
+    [product.name, brandName, categoryName].filter(Boolean).join(" - ");
+
+  const description = truncateForMeta(rawDescription);
 
   const canonicalUrl = `${siteUrl}/product/${id}`;
-  const images = (product.images as string[]) || [];
-  const ogImage = images[0] || `${siteUrl}/og-image.jpg`;
+  const images = product.images || [];
 
   return {
     title,
@@ -69,7 +51,7 @@ export async function generateMetadata({
       "شراء اون لاين",
       "فارما وان",
       ...(product.tags || []),
-    ].filter(Boolean),
+    ].filter(Boolean) as string[],
 
     alternates: { canonical: canonicalUrl },
 
@@ -79,24 +61,26 @@ export async function generateMetadata({
       url: canonicalUrl,
       type: "website",
       siteName: "Pharma One Cosmetics",
-      images: images.slice(0, 4).map((url: string) => ({
-        url,
-        width: 800,
-        height: 800,
-        alt: product.name,
-      })),
+      images: images.length
+        ? images.slice(0, 4).map((url: string) => ({
+            url,
+            width: 800,
+            height: 800,
+            alt: product.name,
+          }))
+        : defaultOgImages,
     },
 
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      images: [ogImage],
+      images: images.length ? [images[0]] : ["/og-image.jpg"],
     },
   };
 }
 
-/* ── Layout: injects Product JSON-LD structured data ──────────────────── */
+/* ── Layout: injects Product + Breadcrumb JSON-LD ─────────────────────── */
 export default async function ProductPageLayout({
   children,
   params,
@@ -110,40 +94,106 @@ export default async function ProductPageLayout({
   let jsonLd: object | null = null;
 
   if (product) {
-    const brandName =
-      typeof product.brand === "object" ? product.brand?.name : product.brand;
-    const images = (product.images as string[]) || [];
+    const brandName = refName(product.brand);
+    const categoryName = refName(product.category);
+    const categorySlug = refSlug(product.category);
+    const images = product.images || [];
     const price = product.discountPrice || product.price;
-    const availability =
-      product.stock > 0
-        ? "https://schema.org/InStock"
-        : "https://schema.org/OutOfStock";
+    const productUrl = `${siteUrl}/product/${id}`;
+
+    /* Offer ------------------------------------------------------------- */
+    const offer: Record<string, unknown> = {
+      "@type": "Offer",
+      url: productUrl,
+      priceCurrency: "EGP",
+      price: String(price),
+      itemCondition: "https://schema.org/NewCondition",
+      availability:
+        product.stock > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
+      // Google warns when an offer has no price validity window. One year out
+      // is a reasonable default for a catalogue without scheduled promotions.
+      priceValidUntil: new Date(Date.now() + 365 * 864e5)
+        .toISOString()
+        .split("T")[0],
+      seller: { "@id": `${siteUrl}/#organization` },
+    };
+
+    /* Product ------------------------------------------------------------ */
+    const productNode: Record<string, unknown> = {
+      "@type": "Product",
+      "@id": `${productUrl}#product`,
+      name: product.name,
+      description: truncateForMeta(
+        product.description || product.shortDescription || "",
+        5000
+      ),
+      sku: product.sku,
+      image: images,
+      url: productUrl,
+      offers: offer,
+    };
+
+    if (brandName) {
+      productNode.brand = { "@type": "Brand", name: brandName };
+    }
+    if (categoryName) {
+      productNode.category = categoryName;
+    }
+
+    // Only emit aggregateRating when real ratings exist. Publishing a zero
+    // rating is a structured-data policy violation, not just a warning.
+    if ((product.reviewCount ?? 0) > 0 && (product.rating ?? 0) > 0) {
+      productNode.aggregateRating = {
+        "@type": "AggregateRating",
+        ratingValue: Number(product.rating),
+        reviewCount: Number(product.reviewCount),
+        bestRating: 5,
+        worstRating: 1,
+      };
+    }
+
+    // Map product specifications onto additionalProperty so the attributes
+    // shown on the page are machine-readable too.
+    if (product.specifications?.length) {
+      productNode.additionalProperty = product.specifications.map((spec) => ({
+        "@type": "PropertyValue",
+        name: spec.key,
+        value: spec.value,
+      }));
+    }
+
+    /* Breadcrumb --------------------------------------------------------- */
+    const crumbs: { name: string; item: string }[] = [
+      { name: "الرئيسية", item: siteUrl },
+      { name: "المتجر", item: `${siteUrl}/shop` },
+    ];
+    if (categoryName) {
+      crumbs.push({
+        name: categoryName,
+        item: categorySlug
+          ? `${siteUrl}/shop?category=${categorySlug}`
+          : `${siteUrl}/shop`,
+      });
+    }
+    crumbs.push({ name: product.name, item: productUrl });
 
     jsonLd = {
       "@context": "https://schema.org",
-      "@type": "Product",
-      "@id": `${siteUrl}/product/${id}`,
-      name: product.name,
-      description: product.description || product.shortDescription || "",
-      sku: product.sku,
-      image: images,
-      url: `${siteUrl}/product/${id}`,
-
-      brand: brandName
-        ? { "@type": "Brand", name: brandName }
-        : undefined,
-
-      offers: {
-        "@type": "Offer",
-        url: `${siteUrl}/product/${id}`,
-        priceCurrency: "EGP",
-        price: String(price),
-        availability,
-        seller: {
-          "@type": "Organization",
-          name: "Pharma One Cosmetics",
+      "@graph": [
+        productNode,
+        {
+          "@type": "BreadcrumbList",
+          "@id": `${productUrl}#breadcrumb`,
+          itemListElement: crumbs.map((c, i) => ({
+            "@type": "ListItem",
+            position: i + 1,
+            name: c.name,
+            item: c.item,
+          })),
         },
-      },
+      ],
     };
   }
 

@@ -11,7 +11,7 @@ export async function GET(
 
     const { slug } = await params;
 
-    const product = await Product.findOne({ slug })
+    const product = await Product.findOne({ slug, isActive: true })
       .populate("brand")
       .populate("category");
 
