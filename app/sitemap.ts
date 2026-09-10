@@ -50,6 +50,24 @@ const staticRoutes: MetadataRoute.Sitemap = [
     changeFrequency: "monthly",
     priority: 0.4,
   },
+  {
+    url: `${siteUrl}/about`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.4,
+  },
+  {
+    url: `${siteUrl}/privacy`,
+    lastModified: new Date(),
+    changeFrequency: "yearly",
+    priority: 0.2,
+  },
+  {
+    url: `${siteUrl}/terms`,
+    lastModified: new Date(),
+    changeFrequency: "yearly",
+    priority: 0.2,
+  },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -75,7 +93,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     }));
 
-    return [...staticRoutes, ...productRoutes, ...brandRoutes];
+    // Category pages rank for the highest-volume commercial terms, so they get
+    // the highest priority after the homepage.
+    const Category = (await import("@/models/Category")).default;
+    const rawCategories = await Category.find({ isActive: true })
+      .select("slug updatedAt")
+      .lean();
+    const categories = rawCategories as unknown as {
+      slug: string;
+      updatedAt?: Date;
+    }[];
+
+    const categoryRoutes: MetadataRoute.Sitemap = categories.map((c) => ({
+      url: `${siteUrl}/category/${encodeURIComponent(c.slug)}`,
+      lastModified: c.updatedAt ?? new Date(),
+      changeFrequency: "daily",
+      priority: 0.9,
+    }));
+
+    return [
+      ...staticRoutes,
+      ...categoryRoutes,
+      ...brandRoutes,
+      ...productRoutes,
+    ];
   } catch {
     // If the DB is unreachable during build, return only static pages
     return staticRoutes;

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { siteUrl, defaultOgImages } from "@/lib/seo";
 import {
   getProduct,
+  cleanSku,
+  skuAsGtin,
   refName,
   refSlug,
   truncateForMeta,
@@ -129,11 +131,20 @@ export default async function ProductPageLayout({
         product.description || product.shortDescription || "",
         5000
       ),
-      sku: product.sku,
+      sku: cleanSku(product.sku),
       image: images,
       url: productUrl,
       offers: offer,
     };
+
+    // Most SKUs in this catalogue are manufacturer barcodes. Publishing the
+    // GTIN lets Google match the product against its own catalogue, which is
+    // close to a requirement for merchant listings.
+    const gtin = skuAsGtin(product.sku);
+    if (gtin) {
+      productNode.gtin = gtin;
+      productNode[`gtin${gtin.length}`] = gtin;
+    }
 
     if (brandName) {
       productNode.brand = { "@type": "Brand", name: brandName };
@@ -173,7 +184,7 @@ export default async function ProductPageLayout({
       crumbs.push({
         name: categoryName,
         item: categorySlug
-          ? `${siteUrl}/shop?category=${categorySlug}`
+          ? `${siteUrl}/category/${encodeURIComponent(categorySlug)}`
           : `${siteUrl}/shop`,
       });
     }

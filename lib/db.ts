@@ -1,5 +1,16 @@
 import mongoose from "mongoose";
 
+/**
+ * Importing the model barrel for its side effects registers every schema on the
+ * mongoose singleton.
+ *
+ * Without this, `.populate("brand")` throws MissingSchemaError whenever the
+ * module that runs the query never imported the Brand model itself — which
+ * depends on route-level import order and so fails intermittently rather than
+ * consistently.
+ */
+import "@/models";
+
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/pharma-one";
 
 if (!MONGODB_URI) {

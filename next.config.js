@@ -17,6 +17,23 @@ const nextConfig = {
       // permanent redirect so any existing links and Google's index consolidate
       // onto the canonical homepage.
       { source: "/home", destination: "/", permanent: true },
+
+      // Categories moved from a query parameter on /shop to real pages.
+      // /shop?category=skincare had no canonical, title or H1 of its own and
+      // rendered identically to /shop, so these consolidate onto the new URLs.
+      ...Object.entries({
+        makeup: "المكياج",
+        skincare: "العناية-بالبشرة",
+        haircare: "العناية-بالشعر",
+        perfumes: "العطور",
+        bodycare: "العناية-بالجسم",
+        tools: "الأدوات-والإكسسوارات",
+      }).map(([key, slug]) => ({
+        source: "/shop",
+        has: [{ type: "query", key: "category", value: key }],
+        destination: `/category/${encodeURIComponent(slug)}`,
+        permanent: true,
+      })),
     ];
   },
 };

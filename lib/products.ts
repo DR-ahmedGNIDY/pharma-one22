@@ -132,6 +132,30 @@ export const getShopProducts = cache(
   }
 );
 
+/**
+ * Read a product's SKU, trimmed.
+ *
+ * A meaningful share of the catalogue has leading/trailing whitespace in the
+ * sku field, which breaks exact matching for GTIN lookups and feed validation.
+ */
+export function cleanSku(sku: string | undefined | null): string {
+  return String(sku ?? "").trim();
+}
+
+/**
+ * Return the SKU as a GTIN when it is one.
+ *
+ * Most of this catalogue stores the manufacturer barcode in the `sku` field —
+ * an EAN-13 like "6224008073482". Google matches products against its own
+ * catalogue by GTIN, so surfacing it lifts eligibility for merchant listings
+ * considerably. Anything that is not a valid 8/12/13/14-digit number (internal
+ * reference codes, for example) returns null rather than a fabricated value.
+ */
+export function skuAsGtin(sku: string | undefined | null): string | null {
+  const clean = cleanSku(sku);
+  return /^\d{8}$|^\d{12,14}$/.test(clean) ? clean : null;
+}
+
 /** Read a populated ref's display name, whichever shape it arrived in. */
 export function refName(
   ref: ProductRef | string | null | undefined
@@ -169,3 +193,35 @@ export function truncateForMeta(text: string, max = 160): string {
   const lastSpace = cut.lastIndexOf(" ");
   return (lastSpace > max * 0.5 ? cut.slice(0, lastSpace) : cut).trimEnd() + "…";
 }
+
+/**
+ * All active products for a brand, resolved on the server.
+ *
+ * Brand pages previously fetched this in the browser, so the product grid —
+ * and every link in it — was invisible to crawlers.
+ */
+export const getBrandProducts = cache(
+  async (brandSlug: string): Promise<ProductDoc[]> => {
+    try {
+      await dbConnect();
+      const Brand = (await import("@/models/Brand")).default;
+      const brand = await Brand.findOne({ slug: brandSlug, isActive: true })
+        .select("_id")
+        .lean();
+      if (!brand) return [];
+
+      const products = await Product.find({
+        brand: (brand as any)._id,
+        isActive: true,
+      })
+        .sort({ isBestSeller: -1, createdAt: -1 })
+        .populate("brand", "name slug")
+        .populate("category", "name slug")
+        .lean();
+
+      return serialize(products as unknown as ProductDoc[]);
+    } catch {
+      return [];
+    }
+  }
+);

@@ -10,6 +10,7 @@ import {
   refName,
   refSlug,
   refId,
+  cleanSku,
 } from "@/lib/products";
 
 import { ProductGallery } from "./ProductGallery";
@@ -71,7 +72,9 @@ export default async function ProductDetailPage({
               <ChevronLeft size={14} aria-hidden />
               <Link
                 href={
-                  categorySlug ? `/shop?category=${categorySlug}` : "/shop"
+                  categorySlug
+                    ? `/category/${encodeURIComponent(categorySlug)}`
+                    : "/shop"
                 }
                 className="hover:text-gold transition-colors"
               >
@@ -144,7 +147,7 @@ export default async function ProductDetailPage({
             {/* SKU & stock — availability now reflects the real stock value */}
             <div className="flex items-center flex-wrap gap-6 text-sm">
               <span className="text-gold-muted">
-                رقم المنتج: <span className="text-cream">{product.sku}</span>
+                رقم المنتج: <span className="text-cream">{cleanSku(product.sku)}</span>
               </span>
               {inStock ? (
                 <span className="flex items-center gap-1 text-green-400">

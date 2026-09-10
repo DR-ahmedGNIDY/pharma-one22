@@ -31,14 +31,16 @@ interface SearchResultItem {
   brand?: { name: string; slug: string } | string;
 }
 
+// Category links point at the server-rendered /category/<slug> pages.
+// The slugs are the real Category.slug values from the database.
 const navLinks = [
   { name: "الرئيسية", href: "/" },
-  { name: "المكياج", href: "/shop?category=makeup" },
-  { name: "العناية بالبشرة", href: "/shop?category=skincare" },
-  { name: "العناية بالشعر", href: "/shop?category=haircare" },
-  { name: "العطور", href: "/shop?category=perfumes" },
-  { name: "العناية بالجسم", href: "/shop?category=bodycare" },
-  { name: "الأدوات والإكسسوارات", href: "/shop?category=tools" },
+  { name: "المكياج", href: "/category/" + encodeURIComponent("المكياج") },
+  { name: "العناية بالبشرة", href: "/category/" + encodeURIComponent("العناية-بالبشرة") },
+  { name: "العناية بالشعر", href: "/category/" + encodeURIComponent("العناية-بالشعر") },
+  { name: "العطور", href: "/category/" + encodeURIComponent("العطور") },
+  { name: "العناية بالجسم", href: "/category/" + encodeURIComponent("العناية-بالجسم") },
+  { name: "الأدوات والإكسسوارات", href: "/category/" + encodeURIComponent("الأدوات-والإكسسوارات") },
   { name: "البراندات", href: "/brands" },
   { name: "العروض", href: "/offers" },
 ];

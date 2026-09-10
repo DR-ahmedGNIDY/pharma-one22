@@ -17,36 +17,42 @@ import {
 const categories = [
   {
     id: "makeup",
+    slug: "المكياج",
     name: "المكياج",
     icon: Palette,
     image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&q=80",
   },
   {
     id: "skincare",
+    slug: "العناية-بالبشرة",
     name: "العناية بالبشرة",
     icon: Droplets,
     image: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&q=80",
   },
   {
     id: "haircare",
+    slug: "العناية-بالشعر",
     name: "العناية بالشعر",
     icon: Wind,
     image: "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?w=500&q=80",
   },
   {
     id: "perfumes",
+    slug: "العطور",
     name: "العطور",
     icon: SprayCan,
     image: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&q=80",
   },
   {
     id: "bodycare",
+    slug: "العناية-بالجسم",
     name: "العناية بالجسم",
     icon: Hand,
     image: "https://images.unsplash.com/photo-1571875257727-256c39da42af?w=500&q=80",
   },
   {
     id: "tools",
+    slug: "الأدوات-والإكسسوارات",
     name: "الأدوات والإكسسوارات",
     icon: Scissors,
     image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=500&q=80",
@@ -96,7 +102,7 @@ export function CategoriesSection() {
               transition={{ delay: index * 0.05 }}
             >
               <Link
-                href={`/shop?category=${category.id}`}
+                href={`/category/${encodeURIComponent(category.slug)}`}
                 className="group relative block overflow-hidden rounded-xl aspect-[4/5]"
               >
                 <Image
