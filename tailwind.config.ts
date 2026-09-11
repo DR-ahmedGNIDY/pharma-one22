@@ -1,4 +1,8 @@
 import type { Config } from "tailwindcss";
+// An ESM import rather than require(): this file uses `export default`, and
+// Node 24 loads .ts config files as ES modules natively, where require() does
+// not exist. Mixing the two crashed the dev server on the first CSS compile.
+import forms from "@tailwindcss/forms";
 
 const config: Config = {
   content: [
@@ -75,7 +79,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [require("@tailwindcss/forms")],
+  plugins: [forms],
 };
 
 export default config;
