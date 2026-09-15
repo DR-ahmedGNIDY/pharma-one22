@@ -36,17 +36,9 @@ export default function HomeLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <>
-      {/* Preload LCP hero image — Server Component link is hoisted to <head> by React/Next.js */}
-      <link
-        rel="preload"
-        href="/images/banners/panar5.webp"
-        as="image"
-        type="image/webp"
-        fetchPriority="high"
-      />
-      {children}
-    </>
-  );
+  // No manual hero preload here. It pointed at the original
+  // /images/banners/panar5.webp (66 KB), while <Image priority> in HeroSection
+  // renders — and already preloads — the resized /_next/image variant (~18 KB
+  // on a phone). Phones downloaded both, and the original was never displayed.
+  return <>{children}</>;
 }

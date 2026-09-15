@@ -135,7 +135,7 @@ export default function OffersClient({
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <ProductCard product={product} />
+                  <ProductCard product={product} priority={index < 4} />
                 </motion.div>
               ))}
             </div>

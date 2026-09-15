@@ -426,7 +426,7 @@ const sortedProducts = [...filteredProducts].sort((a: any, b: any) => {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: (index % PAGE_SIZE) * 0.05 }}
                     >
-                      <ProductCard product={product} />
+                      <ProductCard product={product} priority={index < 4} />
                     </motion.div>
                   ))}
                 </div>

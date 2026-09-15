@@ -29,7 +29,7 @@ const config: Config = {
         "gold-glow": "rgba(212, 175, 55, 0.15)",
       },
       fontFamily: {
-        arabic: ["Noto Sans Arabic", "Tajawal", "sans-serif"],
+        arabic: ["var(--font-arabic)", "Noto Sans Arabic", "Tajawal", "sans-serif"],
         display: ["Playfair Display", "Noto Sans Arabic", "serif"],
       },
       backgroundImage: {

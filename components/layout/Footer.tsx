@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import {
   Phone,
   Mail,
@@ -118,15 +117,8 @@ export function Footer() {
       <div className="border-b border-gold/10">
         <div className="container-luxury py-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {features.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="flex items-center gap-4"
-              >
+            {features.map((feature) => (
+              <div key={feature.title} className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
                   <feature.icon className="text-gold" size={22} />
                 </div>
@@ -134,7 +126,7 @@ export function Footer() {
                   <p className="text-sm font-bold text-cream">{feature.title}</p>
                   <p className="text-xs text-gold-muted">{feature.desc}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

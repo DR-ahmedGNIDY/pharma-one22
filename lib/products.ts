@@ -270,6 +270,62 @@ export const searchProducts = cache(
   }
 );
 
+/**
+ * A random selection of active products, resolved on the server.
+ *
+ * The homepage used to download the entire catalogue (about 2.8 MB of JSON)
+ * to the browser and shuffle it there to show eight cards, which blocked the
+ * main thread for seconds on a phone. `$sample` picks them in the database.
+ * Callers cache the result for their revalidate window, so the selection
+ * rotates at that interval rather than on every request.
+ */
+export const getRandomProducts = cache(
+  async (limit = 8): Promise<ProductDoc[]> => {
+    try {
+      await dbConnect();
+      const sampled = await Product.aggregate([
+        { $match: { isActive: true } },
+        { $sample: { size: limit } },
+        { $project: { _id: 1 } },
+      ]);
+      const ids = sampled.map((s: { _id: unknown }) => s._id);
+
+      const products = await Product.find({ _id: { $in: ids } })
+        .populate("brand", "name slug")
+        .populate("category", "name slug")
+        .lean();
+
+      // $in does not preserve order; restore the sampled order.
+      const byId = new Map(products.map((p: any) => [String(p._id), p]));
+      const ordered = ids
+        .map((id) => byId.get(String(id)))
+        .filter(Boolean);
+
+      return serialize(ordered as unknown as ProductDoc[]);
+    } catch {
+      return [];
+    }
+  }
+);
+
+/** The most recently added active products, resolved on the server. */
+export const getLatestProducts = cache(
+  async (limit = 8): Promise<ProductDoc[]> => {
+    try {
+      await dbConnect();
+      const products = await Product.find({ isActive: true })
+        .sort({ createdAt: -1 })
+        .limit(limit)
+        .populate("brand", "name slug")
+        .populate("category", "name slug")
+        .lean();
+      return serialize(products as unknown as ProductDoc[]);
+    } catch {
+      return [];
+    }
+  }
+);
+
 /** Active offer products, resolved on the server for /offers. */
 export const getOfferProducts = cache(async (): Promise<ProductDoc[]> => {
   try {

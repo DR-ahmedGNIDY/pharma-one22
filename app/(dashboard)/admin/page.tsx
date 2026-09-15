@@ -13,10 +13,12 @@ export default function AdminDashboard() {
   const topProducts: TopProduct[] = [];
 
   useEffect(() => {
-    fetch("/api/products")
+    // Ask for one product and read totalCount — the dashboard only shows the
+    // number, and fetching every product for it downloaded the whole catalogue.
+    fetch("/api/products?page=1&limit=1")
       .then((res) => res.json())
       .then((data) => {
-        if (data?.success) setProductsCount(data.products.length);
+        if (data?.success) setProductsCount(data.totalCount ?? 0);
       })
       .catch(() => setProductsCount(0));
   }, []);

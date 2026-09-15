@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import {
   Heart,
   ShoppingCart,
@@ -19,14 +17,19 @@ import toast from "react-hot-toast";
 interface ProductCardProps {
   product: Product;
   showQuickView?: boolean;
+  /**
+   * Load this card's image eagerly with high fetch priority. Pass it for the
+   * first cards of a grid: the first product image is usually the largest
+   * element in view, and lazy-loading it delays Largest Contentful Paint.
+   */
+  priority?: boolean;
 }
 
 export function ProductCard({
   product,
   showQuickView = true,
+  priority = false,
 }: ProductCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
   const addItem = useCartStore((state) => state.addItem);
   const toggleWishlist = useWishlistStore((state) => state.toggleItem);
   const isInWishlist = useWishlistStore((state) =>
@@ -89,21 +92,15 @@ ${window.location.origin}/product/${product._id}
   const hasDiscount = discountPercentage > 0;
 
 
+  // Hover effects are plain CSS (`group-hover`). This card is rendered dozens of
+  // times per page; it used to run a framer-motion scroll observer per card and
+  // re-render on every mouse enter/leave to fade the overlay.
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="group"
-    >
+    <div className="group">
 
       <Link href={`/product/${product._id}`}>
 
-        <div
-          className="luxury-card relative"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
+        <div className="luxury-card relative">
 
           {/* Image */}
           <div className="relative aspect-square overflow-hidden rounded-t-2xl">
@@ -133,6 +130,7 @@ ${window.location.origin}/product/${product._id}
               }
               alt={product.name}
               fill
+              priority={priority}
               sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, (max-width: 1280px) 30vw, 240px"
               className="
                 object-cover
@@ -144,11 +142,7 @@ ${window.location.origin}/product/${product._id}
 
 
             {/* Hover */}
-            <motion.div
-              initial={false}
-              animate={{
-                opacity: isHovered ? 1 : 0,
-              }}
+            <div
               className="
                 absolute
                 inset-0
@@ -156,6 +150,10 @@ ${window.location.origin}/product/${product._id}
                 flex
                 items-center
                 justify-center
+                opacity-0
+                group-hover:opacity-100
+                transition-opacity
+                duration-300
               "
             >
 
@@ -179,7 +177,7 @@ ${window.location.origin}/product/${product._id}
                 </button>
               )}
 
-            </motion.div>
+            </div>
 
 
             {/* Wishlist */}
@@ -233,9 +231,6 @@ ${window.location.origin}/product/${product._id}
       ? product.brand
       : product.brand?.name ?? ""}
   </p>
-
-
-            
 
 
             {/* Price */}
@@ -317,6 +312,6 @@ ${window.location.origin}/product/${product._id}
 
       </Link>
 
-    </motion.div>
+    </div>
   );
 }

@@ -1,6 +1,7 @@
 ﻿import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "@/components/providers";
+import { Noto_Sans_Arabic } from "next/font/google";
 import { siteUrl } from "@/lib/seo";
 
 
@@ -99,6 +100,27 @@ export const metadata: Metadata = {
   },
 };
 
+/**
+ * The site's Arabic typeface. Tailwind's `font-arabic` stack always asked for
+ * Noto Sans Arabic, but the stylesheet that imported it was never loaded, so
+ * every page rendered in the device's default font. next/font downloads it at
+ * build time and serves it from this domain — no request to Google at runtime —
+ * and generates a metric-matched fallback so swapping it in does not shift
+ * layout. The variable font covers every weight in use with one file per subset.
+ *
+ * Not preloaded on purpose: the Arabic subset is ~160 KB, and preloading it
+ * gives it high priority on every page, competing with the hero and product
+ * images that determine Largest Contentful Paint. Text renders immediately in
+ * the size-adjusted fallback and swaps once the font arrives. (Static weights
+ * would not be smaller — each Arabic weight is ~60 KB and three are in use.)
+ */
+const notoArabic = Noto_Sans_Arabic({
+  subsets: ["arabic", "latin"],
+  display: "swap",
+  preload: false,
+  variable: "--font-arabic",
+});
+
 export const viewport = {
   width: "device-width",
   initialScale: 0.85,
@@ -158,7 +180,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ar" dir="rtl">
+    <html lang="ar" dir="rtl" className={notoArabic.variable}>
       <head>
         {/* Preconnect to external image hosts to reduce DNS + TLS handshake latency */}
         <link rel="preconnect" href="https://res.cloudinary.com" />

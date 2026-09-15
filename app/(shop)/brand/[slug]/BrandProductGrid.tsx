@@ -58,8 +58,12 @@ export function BrandProductGrid({ products, categories }: Props) {
 
       {filtered.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {filtered.map((product) => (
-            <ProductCard key={product._id} product={product} />
+          {filtered.map((product, index) => (
+            <ProductCard
+              key={product._id}
+              product={product}
+              priority={index < 4}
+            />
           ))}
         </div>
       ) : (
