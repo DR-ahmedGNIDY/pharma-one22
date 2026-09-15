@@ -22,18 +22,9 @@ export const {
 
         if (!email || !password) return null;
 
-        // ── Hardcoded admin account ─────────────────────────────────────────
-        // Kept so the admin can always log in even when the DB is unreachable.
-        if (email === "admin@pharmaone.com" && password === "123456") {
-          return {
-            id:    "admin-hardcoded",
-            name:  "Admin",
-            email: "admin@pharmaone.com",
-            role:  "admin",
-          };
-        }
-
         // ── MongoDB user lookup ─────────────────────────────────────────────
+        // The only way in. Admin accounts are ordinary users with role "admin";
+        // create or promote one with `node scripts/create-admin.mjs`.
         // Allows users who registered via /api/auth/register to log in.
         try {
           await dbConnect();
