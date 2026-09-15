@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowLeft, Percent, Sparkles, Truck } from "lucide-react";
-import { useEffect, useState } from "react";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Product } from "@/types";
 
@@ -47,17 +46,15 @@ const promotionalCards = [
   },
 ];
 
-export function OffersSection() {
-  const [offerProducts, setOfferProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    fetch("/api/products?isOffer=true")
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.success) setOfferProducts(data.products);
-      })
-      .catch(console.error);
-  }, []);
+/**
+ * Offer products come from the server as a prop, instead of a browser fetch
+ * that ran after the homepage had rendered.
+ */
+export function OffersSection({
+  offerProducts,
+}: {
+  offerProducts: Product[];
+}) {
 
   return (
     <section className="py-10 bg-[#0a0a0a]">

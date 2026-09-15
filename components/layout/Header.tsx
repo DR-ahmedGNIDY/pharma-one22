@@ -179,6 +179,10 @@ export function Header() {
            {/* Logo Center */}
 {/* Logo Center */}
 {/* ================= MOBILE LOGO ================= */}
+{/* No priority on either logo: both variants are rendered (one hidden per
+    breakpoint), so marking them priority preloaded ~55 KB of logo at high
+    priority on every page, ahead of the product image that is the LCP
+    element. They are in the initial HTML and load fast enough without it. */}
 <Link
   href="/"
   className="flex lg:hidden items-center justify-start"
@@ -189,7 +193,6 @@ export function Header() {
       alt="Pharma One Cosmetics"
       width={700}
       height={220}
-      priority
       sizes="310px"
       className="object-contain w-auto h-[180px] max-w-none"
     />
@@ -207,7 +210,6 @@ export function Header() {
       alt="Pharma One Cosmetics"
       width={700}
       height={220}
-      priority
       sizes="400px"
       className="object-contain w-auto h-[215px] max-w-none"
     />

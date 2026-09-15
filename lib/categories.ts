@@ -138,6 +138,28 @@ export const getSubCategories = cache(
   }
 );
 
+/**
+ * Product counts keyed by category name, for the homepage category cards.
+ *
+ * The cards are defined in code by name, so this shape lets the homepage pass
+ * the counts in as a prop rather than the browser fetching /api/categories.
+ */
+export const getCategoryCountsByName = cache(
+  async (): Promise<Record<string, number>> => {
+    try {
+      const [categories, counts] = await Promise.all([
+        getAllCategories(),
+        getCategoryCounts(),
+      ]);
+      return Object.fromEntries(
+        categories.map((c) => [c.name, counts[c._id] ?? 0])
+      );
+    } catch {
+      return {};
+    }
+  }
+);
+
 export const PRODUCTS_PER_PAGE = 24;
 
 export const getCategoryProducts = cache(

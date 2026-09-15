@@ -3,7 +3,12 @@ import { CategoriesSection } from "@/components/sections/CategoriesSection";
 import { OffersSection } from "@/components/sections/OffersSection";
 import { ProductsSection } from "@/components/sections/ProductsSection";
 import { ReviewsSection } from "@/components/sections/ReviewsSection";
-import { getLatestProducts, getRandomProducts } from "@/lib/products";
+import {
+  getLatestProducts,
+  getOfferProducts,
+  getRandomProducts,
+} from "@/lib/products";
+import { getCategoryCountsByName } from "@/lib/categories";
 import { HomeBrands } from "./HomeBrands";
 
 // Rebuild hourly: the product rows stay current and the random selection
@@ -20,10 +25,13 @@ export const revalidate = 3600;
  * database and rendered into the HTML.
  */
 export default async function HomePage() {
-  const [featuredProducts, latestProducts] = await Promise.all([
-    getRandomProducts(8),
-    getLatestProducts(8),
-  ]);
+  const [featuredProducts, latestProducts, offerProducts, categoryCounts] =
+    await Promise.all([
+      getRandomProducts(8),
+      getLatestProducts(8),
+      getOfferProducts(),
+      getCategoryCountsByName(),
+    ]);
 
   return (
     <>
@@ -36,8 +44,8 @@ export default async function HomePage() {
         viewAllLink="/shop?best-sellers=true"
         badge="BEST SELLERS"
       />
-      <CategoriesSection />
-      <OffersSection />
+      <CategoriesSection countByName={categoryCounts} />
+      <OffersSection offerProducts={offerProducts as any} />
       <ProductsSection
         title="وصل حديثاً"
         subtitle="تعرفي على أحدث المنتجات في متجرنا"

@@ -17,6 +17,25 @@ import { ProductGallery } from "./ProductGallery";
 import { ProductPurchase } from "./ProductPurchase";
 import { ProductTabs } from "./ProductTabs";
 
+// Product pages were rendered from scratch on every request, which put roughly
+// 1.2-1.5 s of server time in front of Largest Contentful Paint. Cache each
+// page for five minutes — short enough that a price or stock edit in the admin
+// panel reaches visitors, and Google, almost immediately.
+export const revalidate = 300;
+
+// An empty list still opts this dynamic route into the full route cache: no
+// product is prerendered at build, but the first request for each one is
+// rendered and then cached for the revalidate window above. Without it the
+// route is rendered from scratch on every single request.
+export async function generateStaticParams() {
+  return [];
+}
+
+// Explicit: a product id that was not prerendered is rendered on demand and
+// then cached, rather than returning 404. With an empty generateStaticParams
+// that is every product, so this must not be left to a default.
+export const dynamicParams = true;
+
 /**
  * Product detail page — a Server Component.
  *

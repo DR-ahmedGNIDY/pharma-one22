@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -59,23 +58,17 @@ const categories = [
   },
 ];
 
-export function CategoriesSection() {
-  const [countByName, setCountByName] = useState<Record<string, number>>({});
-
-  useEffect(() => {
-    fetch("/api/categories")
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.success) {
-          const map: Record<string, number> = {};
-          for (const cat of data.categories) {
-            map[cat.name] = cat.productCount || 0;
-          }
-          setCountByName(map);
-        }
-      })
-      .catch(console.error);
-  }, []);
+/**
+ * Product counts come from the server as a prop. This component used to fetch
+ * /api/categories from the browser after the page had already rendered, which
+ * added a request and a re-render to every homepage visit for data the server
+ * already had.
+ */
+export function CategoriesSection({
+  countByName,
+}: {
+  countByName: Record<string, number>;
+}) {
 
   return (
     <section className="py-10 bg-[#0a0a0a]">
