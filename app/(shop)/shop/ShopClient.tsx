@@ -29,7 +29,13 @@ const catSlugMap: Record<string, string> = {
 
 const PAGE_SIZE = 12;
 
-function ShopContent({ initialProducts }: { initialProducts: Product[] }) {
+function ShopContent({
+  initialProducts,
+  searchQuery,
+}: {
+  initialProducts: Product[];
+  searchQuery: string;
+}) {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>(initialProducts);
   // The server already delivered the first page, so nothing is loading on mount.
@@ -201,7 +207,7 @@ const sortedProducts = [...filteredProducts].sort((a: any, b: any) => {
           className="mb-10"
         >
           <h1 className="text-3xl md:text-4xl font-bold text-cream mb-4">
-            تسوقي الآن
+            {searchQuery ? `نتائج البحث عن "${searchQuery}"` : "تسوقي الآن"}
           </h1>
           <p className="text-gold-muted">
             {loading ? "جارِ التحميل..." : `${sortedProducts.length} منتج متاح`}
@@ -446,8 +452,10 @@ const sortedProducts = [...filteredProducts].sort((a: any, b: any) => {
 
 export default function ShopClient({
   initialProducts,
+  searchQuery = "",
 }: {
   initialProducts: Product[];
+  searchQuery?: string;
 }) {
   return (
     <Suspense fallback={
@@ -455,7 +463,7 @@ export default function ShopClient({
         <div className="w-8 h-8 border-2 border-gold/30 border-t-gold rounded-full animate-spin" />
       </div>
     }>
-      <ShopContent initialProducts={initialProducts} />
+      <ShopContent initialProducts={initialProducts} searchQuery={searchQuery} />
     </Suspense>
   );
 }

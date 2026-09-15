@@ -14,6 +14,10 @@ import {
   PRODUCTS_PER_PAGE,
 } from "@/lib/categories";
 
+// Category pages are prerendered at build. Rebuild them hourly so new, removed
+// or deactivated products show up without waiting for a deploy.
+export const revalidate = 3600;
+
 type Props = {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ page?: string }>;

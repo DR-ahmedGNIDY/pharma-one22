@@ -225,3 +225,62 @@ export const getBrandProducts = cache(
     }
   }
 );
+
+function escapeRegex(text: string): string {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+/**
+ * Product search, resolved on the server.
+ *
+ * Mirrors /api/products/search (name, tags, or brand name) so that
+ * /shop?q=… — the search URL declared in the site's SearchAction markup —
+ * returns real results in its HTML instead of ignoring the query.
+ */
+export const searchProducts = cache(
+  async (query: string, limit = 48): Promise<ProductDoc[]> => {
+    const q = query.trim();
+    if (!q) return [];
+    try {
+      await dbConnect();
+      const regex = new RegExp(escapeRegex(q), "i");
+      const Brand = (await import("@/models/Brand")).default;
+      const brands = await Brand.find({ name: { $regex: regex } })
+        .select("_id")
+        .lean();
+
+      const products = await Product.find({
+        isActive: true,
+        $or: [
+          { name: { $regex: regex } },
+          { tags: { $regex: regex } },
+          { brand: { $in: brands.map((b: any) => b._id) } },
+        ],
+      })
+        .sort({ isBestSeller: -1, createdAt: -1 })
+        .limit(limit)
+        .populate("brand", "name slug")
+        .populate("category", "name slug")
+        .lean();
+
+      return serialize(products as unknown as ProductDoc[]);
+    } catch {
+      return [];
+    }
+  }
+);
+
+/** Active offer products, resolved on the server for /offers. */
+export const getOfferProducts = cache(async (): Promise<ProductDoc[]> => {
+  try {
+    await dbConnect();
+    const products = await Product.find({ isActive: true, isOffer: true })
+      .sort({ createdAt: -1 })
+      .populate("brand", "name slug")
+      .populate("category", "name slug")
+      .lean();
+    return serialize(products as unknown as ProductDoc[]);
+  } catch {
+    return [];
+  }
+});
