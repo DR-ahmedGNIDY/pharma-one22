@@ -34,6 +34,16 @@ const nextConfig = {
         destination: `/category/${encodeURIComponent(slug)}`,
         permanent: true,
       })),
+
+      // Category pagination moved from ?page=N into the path. Reading a search
+      // param opts a route out of the full route cache, so the old URLs forced
+      // every category request — page 1 included — to render from scratch.
+      {
+        source: "/category/:slug",
+        has: [{ type: "query", key: "page", value: "(?<n>\\d+)" }],
+        destination: "/category/:slug/page/:n",
+        permanent: true,
+      },
     ];
   },
 };

@@ -4,14 +4,11 @@ import {
   getCategoryBySlug,
   getCategoryProducts,
   categoryMetaDescription,
-  PRODUCTS_PER_PAGE,
 } from "@/lib/categories";
 
 type Params = { params: Promise<{ slug: string }> };
 
-export async function generateMetadata({
-  params,
-}: Params): Promise<Metadata> {
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const decoded = decodeURIComponent(slug);
   const category = await getCategoryBySlug(decoded);
@@ -28,8 +25,7 @@ export async function generateMetadata({
   const title = `${category.name}`;
   const description = categoryMetaDescription(category, total);
 
-  // The canonical always points at page 1 of the category. Paginated views set
-  // their own canonical in the page component via the `page` search param.
+  // Paginated pages override this canonical with their own.
   const canonicalUrl = `${siteUrl}/category/${encodeURIComponent(
     category.slug
   )}`;
@@ -57,85 +53,13 @@ export async function generateMetadata({
   };
 }
 
-export default async function CategoryLayout({
+// The JSON-LD that used to live here moved into CategoryView: emitted from the
+// layout it appeared on every paginated page while describing page 1's
+// products. It now renders only on page 1, where it is accurate.
+export default function CategoryLayout({
   children,
-  params,
-}: Params & { children: React.ReactNode }) {
-  const { slug } = await params;
-  const decoded = decodeURIComponent(slug);
-  const category = await getCategoryBySlug(decoded);
-
-  let jsonLd: object | null = null;
-
-  if (category) {
-    const { products, total } = await getCategoryProducts(category._id, 1);
-    const categoryUrl = `${siteUrl}/category/${encodeURIComponent(
-      category.slug
-    )}`;
-
-    jsonLd = {
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "CollectionPage",
-          "@id": `${categoryUrl}#collection`,
-          url: categoryUrl,
-          name: category.name,
-          description: categoryMetaDescription(category, total),
-          isPartOf: { "@id": `${siteUrl}/#website` },
-          inLanguage: "ar-EG",
-        },
-        {
-          "@type": "ItemList",
-          "@id": `${categoryUrl}#itemlist`,
-          name: category.name,
-          numberOfItems: total,
-          itemListElement: products
-            .slice(0, PRODUCTS_PER_PAGE)
-            .map((p, i) => ({
-              "@type": "ListItem",
-              position: i + 1,
-              url: `${siteUrl}/product/${p._id}`,
-              name: p.name,
-            })),
-        },
-        {
-          "@type": "BreadcrumbList",
-          "@id": `${categoryUrl}#breadcrumb`,
-          itemListElement: [
-            {
-              "@type": "ListItem",
-              position: 1,
-              name: "الرئيسية",
-              item: siteUrl,
-            },
-            {
-              "@type": "ListItem",
-              position: 2,
-              name: "المتجر",
-              item: `${siteUrl}/shop`,
-            },
-            {
-              "@type": "ListItem",
-              position: 3,
-              name: category.name,
-              item: categoryUrl,
-            },
-          ],
-        },
-      ],
-    };
-  }
-
-  return (
-    <>
-      {jsonLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      )}
-      {children}
-    </>
-  );
+}: {
+  children: React.ReactNode;
+}) {
+  return <>{children}</>;
 }

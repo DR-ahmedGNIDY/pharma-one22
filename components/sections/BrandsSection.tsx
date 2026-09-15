@@ -21,7 +21,10 @@ interface BrandsSectionProps {
 const CARD_WIDTH = 150;
 const CARD_GAP = 20; // gap-5
 const AUTO_SPEED = 40; // px per second
-const COPIES = 4;
+// Two copies are enough for a seamless loop: the track is reset by one set
+// width each cycle, so a third and fourth copy only added DOM nodes. With 96
+// brands that is 192 animated cards instead of 384.
+const COPIES = 2;
 const RESUME_DELAY = 1600; // ms after manual interaction before auto-scroll resumes
 
 export function BrandsSection({
