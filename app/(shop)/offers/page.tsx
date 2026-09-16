@@ -15,6 +15,21 @@ export const revalidate = 3600;
 export default async function OffersPage() {
   const products = await getOfferProducts();
 
+  // The banners carried fixed end dates that expired in December 2024 and kept
+  // showing on the live site. They are evergreen banners, not a dated campaign,
+  // so the label follows the current month. Swap in real dates when there is a
+  // real campaign behind them.
+  const now = new Date();
+  const offersEndLabel = new Date(
+    now.getFullYear(),
+    now.getMonth() + 1,
+    0
+  ).toLocaleDateString("ar-EG", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
   const jsonLd = products.length
     ? {
         "@context": "https://schema.org",
@@ -39,7 +54,10 @@ export default async function OffersPage() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       )}
-      <OffersClient initialProducts={products as any} />
+      <OffersClient
+        initialProducts={products as any}
+        offersEndLabel={offersEndLabel}
+      />
     </>
   );
 }

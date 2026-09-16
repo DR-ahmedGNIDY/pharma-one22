@@ -14,7 +14,6 @@ const featuredOffers = [
     description: "اكتشفي أفضل العروض على منتجات المكياج والعناية بالبشرة",
     image:
       "https://images.unsplash.com/photo-1612817288484-6f916006741a?w=800&q=80",
-    endDate: "2024-12-31",
     badge: "محدودة",
   },
   {
@@ -24,7 +23,6 @@ const featuredOffers = [
     description: "اختيارك المثالي للهدايا أو لتجديد مخزونك الشخصي",
     image:
       "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=800&q=80",
-    endDate: "2024-12-25",
     badge: "BOGO",
   },
   {
@@ -34,15 +32,16 @@ const featuredOffers = [
     description: "فرصة ذهبية لامتلاك أرقى العطور العالمية بأسعار مميزة",
     image:
       "https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&q=80",
-    endDate: "2024-12-20",
     badge: "عطور",
   },
 ];
 
 export default function OffersClient({
   initialProducts,
+  offersEndLabel,
 }: {
   initialProducts: Product[];
+  offersEndLabel: string;
 }) {
   // Offer products arrive from the server component, so they are part of the
   // initial HTML instead of being fetched after the page loads.
@@ -106,7 +105,7 @@ export default function OffersClient({
                 </p>
                 <div className="flex items-center gap-2 text-gold text-sm">
                   <Clock size={14} />
-                  <span>تنتهي: {offer.endDate}</span>
+                  <span>تنتهي: {offersEndLabel}</span>
                 </div>
               </div>
             </motion.div>
