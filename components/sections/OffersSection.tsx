@@ -29,7 +29,7 @@ const promotionalCards = [
     image:
       "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600&q=80",
     cta: "اكتشفي الآن",
-    link: "/shop?new=true",
+    link: "/shop",
     icon: Sparkles,
   },
   {

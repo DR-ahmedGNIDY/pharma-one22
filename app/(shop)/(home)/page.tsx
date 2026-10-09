@@ -41,7 +41,7 @@ export default async function HomePage() {
         title="الأكثر مبيعاً"
         subtitle="اكتشفي المنتجات الأكثر شعبية بين عملائنا"
         products={featuredProducts as any}
-        viewAllLink="/shop?best-sellers=true"
+        viewAllLink="/shop"
         badge="BEST SELLERS"
       />
       <CategoriesSection countByName={categoryCounts} />
@@ -50,7 +50,7 @@ export default async function HomePage() {
         title="وصل حديثاً"
         subtitle="تعرفي على أحدث المنتجات في متجرنا"
         products={latestProducts as any}
-        viewAllLink="/shop?new=true"
+        viewAllLink="/shop"
         badge="NEW ARRIVALS"
       />
       <ReviewsSection />

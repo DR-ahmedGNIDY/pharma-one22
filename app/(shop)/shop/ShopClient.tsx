@@ -28,6 +28,8 @@ const catSlugMap: Record<string, string> = {
 };
 
 const PAGE_SIZE = 12;
+// Must match the limit getShopProducts uses for the server-rendered first page.
+const SERVER_PAGE_SIZE = 24;
 
 function ShopContent({
   initialProducts,
@@ -55,6 +57,14 @@ function ShopContent({
   });
 
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  // The server only renders the first SERVER_PAGE_SIZE products; the rest of
+  // the catalogue is fetched page by page as the visitor asks for more.
+  const [serverPage, setServerPage] = useState(1);
+  const [serverHasMore, setServerHasMore] = useState(
+    !searchQuery && initialProducts.length >= SERVER_PAGE_SIZE
+  );
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const categoryParam = searchParams.get("category");
 
@@ -87,12 +97,50 @@ function ShopContent({
 
       if (data.success) {
         setProducts(data.products || []);
+        // Without ?page the API returns every matching product.
+        setServerHasMore(false);
       }
     } catch (error) {
       console.error("LOAD PRODUCTS ERROR:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadMoreFromServer = async () => {
+    setLoadingMore(true);
+    try {
+      const nextPage = serverPage + 1;
+      const categorySlug = categoryParam ? catSlugMap[categoryParam] : undefined;
+      const params = new URLSearchParams({
+        page: String(nextPage),
+        limit: String(SERVER_PAGE_SIZE),
+      });
+      if (categorySlug) params.set("categorySlug", categorySlug);
+      const res = await fetch(`/api/products?${params}`);
+      const data = await res.json();
+
+      if (data.success) {
+        setProducts((prev) => {
+          const seen = new Set(prev.map((p) => p._id));
+          return [...prev, ...(data.products || []).filter((p: Product) => !seen.has(p._id))];
+        });
+        setServerPage(nextPage);
+        setServerHasMore(nextPage < (data.totalPages || 1));
+      }
+    } catch (error) {
+      console.error("LOAD MORE PRODUCTS ERROR:", error);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  const showMore = async () => {
+    // Fetch the next server page once the products already loaded run out.
+    if (serverHasMore && visibleCount + PAGE_SIZE > sortedProducts.length) {
+      await loadMoreFromServer();
+    }
+    setVisibleCount((c) => c + PAGE_SIZE);
   };
 
   // Apply URL params
@@ -185,7 +233,7 @@ const sortedProducts = [...filteredProducts].sort((a: any, b: any) => {
 });
 
   const visibleProducts = sortedProducts.slice(0, visibleCount);
-  const hasMore = visibleCount < sortedProducts.length;
+  const hasMore = visibleCount < sortedProducts.length || serverHasMore;
 
   const toggleFilter = (type: "brands" | "categories", value: string) => {
     setFilters((prev) => {
@@ -434,10 +482,15 @@ const sortedProducts = [...filteredProducts].sort((a: any, b: any) => {
                 {hasMore && (
                   <div className="flex justify-center mt-10">
                     <button
-                      onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
-                      className="px-8 py-3 rounded-xl border border-gold/30 text-gold hover:bg-gold/10 transition-colors text-sm font-medium"
+                      onClick={showMore}
+                      disabled={loadingMore}
+                      className="px-8 py-3 rounded-xl border border-gold/30 text-gold hover:bg-gold/10 transition-colors text-sm font-medium disabled:opacity-50"
                     >
-                      عرض المزيد ({sortedProducts.length - visibleCount} متبقي)
+                      {loadingMore
+                        ? "جارِ التحميل..."
+                        : serverHasMore
+                          ? "عرض المزيد"
+                          : `عرض المزيد (${sortedProducts.length - visibleCount} متبقي)`}
                     </button>
                   </div>
                 )}
